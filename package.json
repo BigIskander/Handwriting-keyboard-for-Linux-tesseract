@@ -1,0 +1,48 @@
+{
+  "name": "handwriting_keyboard",
+  "version": "1.0.0",
+  "description": "Handwriting keyboard!",
+  "homepage": "No",
+  "private": true,
+  "main": "main.js",
+  "author": "Iskander Sultanov <BigIskander@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder build"
+  },
+  "dependencies": {
+    "@nut-tree/nut-js": "3.1.2"
+  },
+  "devDependencies": {
+    "electron": "27.0.2",
+    "electron-builder": "24.6.3"
+  },
+  "build": {
+    "files": [
+      "!**/dist"
+    ],
+    "linux": {
+      "category": "Education",
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ]
+    },
+    "deb": {
+      "depends": ["xsel"]
+    }
+  }
+}

@@ -1,0 +1,42 @@
+.selectWordPanel {
+    display: flex; 
+    flex-direction:row; 
+    height: 30px; 
+    margin-top: 2px; 
+    margin-bottom: 2px;
+}
+.selectWordItem {
+    font-size: x-large;
+    margin-left: 3px;  
+    padding-left: 5px; 
+    padding-right: 5px;
+    background-color: aliceblue;
+}
+.selectWordItem:hover {
+    background-color: lightblue;
+    cursor: pointer;
+}
+.errorMessage {
+    color: red;
+    text-align: left;
+    height: 30px; 
+    margin-top: 2px; 
+    margin-bottom: 2px;
+    padding-left: 5px;
+}
+.internalLink, .internalLinkRed {
+    color: darkblue;
+    box-shadow: 0px 2px lightblue;
+    margin-right: 10px;
+    text-decoration: none;
+}
+.internalLink:hover {
+    box-shadow: 0px 2px darkblue;
+}
+.internalLinkRed {
+    color: crimson;
+}
+.internalLinkRed:hover {
+    color: red;
+    box-shadow: 0px 2px darkred;
+}
