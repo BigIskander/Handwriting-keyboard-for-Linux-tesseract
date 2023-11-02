@@ -17,3 +17,5 @@ Run from code:
 Compile:
 
 <code>npm run build</code>
+
+In order to run compiled version you need to install xsel package in to your Linux system. <code>sudo apt install xsel</code>
