@@ -20,7 +20,8 @@
   },
   "build": {
     "files": [
-      "!**/dist"
+      "!dist",
+      "!dist/*"
     ],
     "linux": {
       "category": "Education",
