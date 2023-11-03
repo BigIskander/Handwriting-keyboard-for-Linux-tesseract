@@ -1,56 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="style.css">
-    <script src="handwriting.canvas.js"></script>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="src/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>手写</title>
+    <script>
+      var choseWord
+      var erase
+    </script>
+    <script src="/src/handwriting.canvas.js"></script>
+    <script type="module" defer>
+      var main = await import("/src/main.ts");
+      choseWord = main.choseWord;
+      erase = main.erase;
+    </script>
   </head>
   <body>
     <div id="results" class="selectWordPanel"></div>
     <div><canvas id="can" width="1000" height="200" style="border: 1px solid; cursor: crosshair;"></canvas></div>
     <div style="margin-bottom: 5px; text-align: right;"><a onclick="choseWord(' ')" class="internalLink" href="JavaScript:void(0);" >Пробел.</a><a onclick="erase()" href="JavaScript:void(0);" class="internalLinkRed">Очистить.</a></div>
-    <script>
-      var out = document.getElementById('results')
-      function recognize() {
-        if(can.trace.length > 0) can.recognize()
-      }
-      function displayRecognizedWords(data, err) {
-        if(err) {
-          out.innerHTML = '<div v-else class="errorMessage">' + err.message + '</div>'
-        } else {
-          out.innerHTML = ""
-          for(var word of data) {
-            out.innerHTML = out.innerHTML + '<div class="selectWordItem" onclick="choseWord(\'' + word + '\')">' + word + '</div>';
-          }
-        }
-      }
-      
-      var offset = 20
-      var mycan = document.getElementById('can')
-      mycan.setAttribute('width', screen.width - offset)
-      window.onresize = () => { mycan.setAttribute('width', window.outerWidth - 20) }
-
-      var can = new handwriting.Canvas(mycan)
-      can.setCallBack((data, err) => displayRecognizedWords(data, err));
-      can.setMouseUpCallBack(() => recognize())
-      //Set line width shown on the canvas element (default: 3)
-      can.setLineWidth(3);
-      //Set options
-      can.setOptions({
-        language: 'zh-CN',
-        numOfReturn: 5
-      });
-
-      function erase() {
-        can.erase()
-        out.innerHTML = ""
-      }
-
-      function choseWord(word) {
-        window.writeit.pasteWord(word)
-        erase()
-      }
-    </script>
   </body>
 </html>

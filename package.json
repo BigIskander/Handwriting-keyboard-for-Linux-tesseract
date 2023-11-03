@@ -1,49 +1,20 @@
 {
-  "name": "handwriting_keyboard",
-  "version": "1.0.0",
-  "description": "Handwriting keyboard!",
-  "homepage": "No",
+  "name": "handwriting-keyboard",
   "private": true,
-  "main": "main.js",
-  "author": "Iskander Sultanov <BigIskander@gmail.com>",
-  "license": "MIT",
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "electron .",
-    "build": "electron-builder build"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
   },
   "dependencies": {
-    "@nut-tree/nut-js": "3.1.2"
+    "@tauri-apps/api": "^1.5.1"
   },
   "devDependencies": {
-    "electron": "27.0.2",
-    "electron-builder": "24.6.3"
-  },
-  "build": {
-    "files": [
-      "!dist",
-      "!dist/*"
-    ],
-    "linux": {
-      "category": "Education",
-      "target": [
-        {
-          "target": "AppImage",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        },
-        {
-          "target": "deb",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        }
-      ]
-    },
-    "deb": {
-      "depends": ["xsel"]
-    }
+    "@tauri-apps/cli": "^1.5.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.4"
   }
 }

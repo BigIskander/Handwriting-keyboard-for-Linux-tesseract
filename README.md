@@ -1,21 +1,7 @@
-# Handwriting-keyboard-for-Linux.
+# Tauri + Vanilla TS
 
-Currently supports only Chinese language.
+This template should help get you started developing with Tauri in vanilla HTML, CSS and Typescript.
 
-You can change language by editing, this line <code>language: 'zh-CN',</code> in index.html file.
+## Recommended IDE Setup
 
-You need to install <b>Node.js 18</b> or newer in order to run this programm.
-
-To install dependencies:
-
-<code>npm install</code>
-
-Run from code:
-
-<code>npm run start</code>
-
-Compile:
-
-<code>npm run build</code>
-
-In order to run compiled version you need to install xsel package in to your Linux system. <code>sudo apt install xsel</code>
+- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
