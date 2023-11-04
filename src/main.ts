@@ -1,5 +1,8 @@
+import { currentMonitor } from '@tauri-apps/api/window';
+import { appWindow, LogicalSize, LogicalPosition } from '@tauri-apps/api/window';
 import { writeText } from '@tauri-apps/api/clipboard';
 import { Command } from "@tauri-apps/api/shell";
+const monitor = await currentMonitor();
 const pasteword = new Command("xdotool", ['key', "--delay", "100", 'alt+Tab', 'ctrl+v']);
 // @ts-ignore
 var out: HTMLElement = document.getElementById('results')
@@ -20,10 +23,22 @@ function displayRecognizedWords(data: any, err: any) {
 }
 
 var offset = 20;
+var voffset = 100;
+var bottom_offset = 40;
+if (monitor) {
+    await appWindow.setSize(new LogicalSize(monitor.size.width, 300));
+    await appWindow.setPosition(new LogicalPosition(monitor.position.x, monitor.position.y + monitor.size.height - window.outerHeight - bottom_offset));
+}
 // @ts-ignore
 var mycan: HTMLElement = document.getElementById('can');
 mycan.setAttribute('width', String(window.outerWidth  - offset));
-window.onresize = () => { mycan.setAttribute('width', String(window.outerWidth - 20)) };
+mycan.setAttribute('height', String(window.outerHeight  - voffset));
+window.onresize = () => { 
+    mycan.setAttribute('width', String(window.outerWidth - offset));
+    mycan.setAttribute('height', String(window.outerHeight - voffset));
+    can.height = window.outerHeight - voffset;
+    can.width = window.outerWidth - offset;
+};
 
 // @ts-ignore
 var can = new handwriting.Canvas(mycan);
@@ -34,7 +49,7 @@ can.setLineWidth(3);
 //Set options
 can.setOptions({
     language: 'zh-CN',
-    numOfReturn: 5
+    numOfReturn: 8
 });
 
 function erase() {

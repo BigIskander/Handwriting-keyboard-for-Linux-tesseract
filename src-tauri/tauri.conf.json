@@ -8,11 +8,16 @@
   },
   "package": {
     "productName": "handwriting-keyboard",
-    "version": "0.0.0"
+    "version": "1.0.0"
   },
   "tauri": {
     "allowlist": {
       "all": false,
+      "window": {
+        "all": false,
+        "setPosition": true,
+        "setSize": true
+      },
       "shell": {
         "all": false,
         "execute": true,
@@ -49,9 +54,11 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "handwriting-keyboard",
+        "title": "手写",
         "width": 800,
-        "height": 600,
+        "height": 300,
+        "minWidth": 800,
+        "minHeight": 300,
         "alwaysOnTop": true
       }
     ]
