@@ -50,7 +50,7 @@
         "depends": ["xdotool"]
       },
       "category": "Education",
-      "longDescription": "Hadnwriting keyboard for Linux X11 desktop environment. Currently supports Chinese language only. To recongize handwritten pattern program uses Google API. Github page: https://github.com/BigIskander/Handwriting-keyboard-for-Linux./tree/main",
+      "longDescription": "Hadnwriting keyboard for Linux X11 desktop environment. Currently supports Chinese language only. To recognize handwritten pattern program uses Google API. Github page: https://github.com/BigIskander/Handwriting-keyboard-for-Linux./tree/main",
       "shortDescription": "Hadnwriting keyboard for Linux."
     },
     "security": {
