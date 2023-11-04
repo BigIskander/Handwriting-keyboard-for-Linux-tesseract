@@ -9,11 +9,13 @@
       var choseWord
       var erase
     </script>
-    <script src="/src/handwriting.canvas.js"></script>
+    <script type="module" src="/src/handwriting.canvas.js"></script>
     <script type="module" defer>
-      var main = await import("/src/main.ts");
-      choseWord = main.choseWord;
-      erase = main.erase;
+      (async () => {
+        var main = await import("/src/main.ts");
+        choseWord = main.choseWord;
+        erase = main.erase;
+      })();
     </script>
   </head>
   <body>

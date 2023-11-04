@@ -48,7 +48,10 @@
       ],
       "deb": {
         "depends": ["xdotool"]
-      }
+      },
+      "category": "Education",
+      "longDescription": "Hadnwriting keyboard for Linux. Currently supports Chinese language only. Github: https://github.com/BigIskander/Handwriting-keyboard-for-Linux./tree/main",
+      "shortDescription": "Hadnwriting keyboard for Linux."
     },
     "security": {
       "csp": null

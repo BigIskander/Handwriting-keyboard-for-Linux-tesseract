@@ -2,7 +2,6 @@ import { currentMonitor } from '@tauri-apps/api/window';
 import { appWindow, LogicalSize, LogicalPosition } from '@tauri-apps/api/window';
 import { writeText } from '@tauri-apps/api/clipboard';
 import { Command } from "@tauri-apps/api/shell";
-const monitor = await currentMonitor();
 const pasteword = new Command("xdotool", ['key', "--delay", "100", 'alt+Tab', 'ctrl+v']);
 // @ts-ignore
 var out: HTMLElement = document.getElementById('results')
@@ -25,10 +24,13 @@ function displayRecognizedWords(data: any, err: any) {
 var offset = 20;
 var voffset = 100;
 var bottom_offset = 40;
-if (monitor) {
-    await appWindow.setSize(new LogicalSize(monitor.size.width, 300));
-    await appWindow.setPosition(new LogicalPosition(monitor.position.x, monitor.position.y + monitor.size.height - window.outerHeight - bottom_offset));
-}
+(async () => {
+    const monitor = await currentMonitor();
+    if (monitor) {
+        await appWindow.setSize(new LogicalSize(monitor.size.width, 300));
+        await appWindow.setPosition(new LogicalPosition(monitor.position.x, monitor.position.y + monitor.size.height - window.outerHeight - bottom_offset));
+    }
+})();
 // @ts-ignore
 var mycan: HTMLElement = document.getElementById('can');
 mycan.setAttribute('width', String(window.outerWidth  - offset));
