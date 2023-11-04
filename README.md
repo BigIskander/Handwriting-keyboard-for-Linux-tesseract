@@ -14,7 +14,7 @@ Programm written by using tauri framework https://tauri.app/
 
 Program based on script from https://github.com/ChenYuHo/handwriting.js
 
-To recongize handwritten pattern program uses Google API.
+To recognize handwritten pattern program uses Google API.
 
 You can change language of recognition by editing this line <code>language: 'zh-CN',</code> in /src/main.ts file.
 
