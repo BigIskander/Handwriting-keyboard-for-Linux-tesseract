@@ -1,3 +1,13 @@
+# Experimenting with tesseract
+
+This is experimental, unfinished and not working version of program. For stable version go to main branch.
+
+Install tesseract: <code>sudo apt install tesseract-ocr</code>
+
+Training data to recognize chinese language [https://github.com/gumblex/tessdata_chi](https://github.com/gumblex/tessdata_chi)
+
+Testing offline capabilities...
+
 # Handwriting-keyboard-for-Linux.
 
 This is programm written for Linux X11 desktop environment.
