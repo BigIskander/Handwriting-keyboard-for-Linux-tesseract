@@ -1,5 +1,6 @@
 import { currentMonitor } from '@tauri-apps/api/window';
 import { appWindow, LogicalSize, LogicalPosition } from '@tauri-apps/api/window';
+import { invoke } from '@tauri-apps/api/tauri';
 import { writeText } from '@tauri-apps/api/clipboard';
 import { Command } from "@tauri-apps/api/shell";
 const pasteword = new Command("xdotool", ['key', "--delay", "100", 'alt+Tab', 'ctrl+v']);
@@ -65,7 +66,16 @@ async function choseWord(word: String) {
     erase();
 }
 
+function test_me() {
+    console.log("ok ok...")
+    // @ts-ignore
+    var image_data = mycan.toDataURL().split('base64,')[1];
+    invoke('recognize_text', {base64Image: image_data}).then(
+        () => { console.log("INVOKED...") }).catch( (e) => { console.log(e) } );
+}
+
 export {
     erase,
-    choseWord
+    choseWord,
+    test_me
 }
