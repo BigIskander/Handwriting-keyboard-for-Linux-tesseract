@@ -7,18 +7,19 @@ const pasteword = new Command("xdotool", ['key', "--delay", "100", 'alt+Tab', 'c
 // @ts-ignore
 var out: HTMLElement = document.getElementById('results')
 
-function recognize() {
-    if(can.trace.length > 0) can.recognize()
+async function recognizeText() {
+    // if (can.drawing)
+    // @ts-ignore
+    var image_data = await mycan.toDataURL().split('base64,')[1];
+    // @ts-ignore
+    await invoke('recognize_text', {base64Image: image_data}).then((response) => { displayRecognizedText(response.slice(0, -2), null); }).catch((err) => { displayRecognizedText("", err) });
 }
 
-function displayRecognizedWords(data: any, err: any) {
+function displayRecognizedText(text: any, err: any) {
     if(err) {
-        out.innerHTML = '<div v-else class="errorMessage">' + err.message + '</div>'
+        out.innerHTML = '<div v-else class="errorMessage">' + err + '</div>'
     } else {
-        out.innerHTML = ""
-        for(var word of data) {
-        out.innerHTML = out.innerHTML + '<div class="selectWordItem" onclick="choseWord(\'' + word + '\')">' + word + '</div>';
-        }
+        out.innerHTML = '<div class="selectWordItem" onclick="choseWord(\'' + text + '\')">' + text + '</div>';
     }
 }
 
@@ -45,15 +46,9 @@ window.onresize = () => {
 
 // @ts-ignore
 var can = new handwriting.Canvas(mycan);
-can.setCallBack((data: any, err: any) => displayRecognizedWords(data, err));
-can.setMouseUpCallBack(() => recognize());
+can.setMouseUpCallBack(() => recognizeText());
 //Set line width shown on the canvas element (default: 3)
 can.setLineWidth(3);
-//Set options
-can.setOptions({
-    language: 'zh-CN',
-    numOfReturn: 8
-});
 
 function erase() {
     can.erase();
@@ -66,16 +61,7 @@ async function choseWord(word: String) {
     erase();
 }
 
-function test_me() {
-    console.log("ok ok...")
-    // @ts-ignore
-    var image_data = mycan.toDataURL().split('base64,')[1];
-    invoke('recognize_text', {base64Image: image_data}).then(
-        () => { console.log("INVOKED...") }).catch( (e) => { console.log(e) } );
-}
-
 export {
     erase,
-    choseWord,
-    test_me
+    choseWord
 }
