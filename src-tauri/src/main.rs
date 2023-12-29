@@ -7,29 +7,32 @@
 use base64::decode;
 use image::load_from_memory;
 use rusty_tesseract::{Args, Image, image_to_string};
-use std::collections::HashMap;
+use std::{collections::HashMap, path};
 use tempfile::tempfile;
+use std::fs;
 
 #[tauri::command]
 fn recognize_text(base_64_image: String) -> String {
     // println!("{base_64_image}");
     let vec8_image = decode(base_64_image).unwrap();
-    let dynamic_image = load_from_memory(&vec8_image).unwrap();
+    // let dynamic_image = load_from_memory(&vec8_image).unwrap();
     //
-    let tempfile = tempfile::Builder::new()
-            .prefix("rusty-tesseract")
-            .suffix(".png")
-            .tempfile()
-            .unwrap();
-    let path = tempfile.path();
-    dynamic_image.save(path); // saving image to temp path is slow...
+    // let tempfile = tempfile::Builder::new()
+    //         .prefix("rusty-tesseract")
+    //         .suffix(".png")
+    //         .tempfile()
+    //         .unwrap();
+    // let path = tempfile.path();
+    let path = "/home/iskander/test.png";
+    fs::write(path, vec8_image).expect("Unable to write file"); // writing temp file to disk is slow...
+    // dynamic_image.save(path); // saving image to temp path is slow...
 
     // let path_str = path;
     // println!("{path_str}");
 
     //
     // let image = Image::from_dynamic_image(&dynamic_image).unwrap(); // slow function
-    // let image = Image::from_path(path).unwrap();
+    let image = Image::from_path(path).unwrap();
     return  "respond...".to_string();
     // let my_args = Args {
     //     lang: "chi_all".to_string(),
