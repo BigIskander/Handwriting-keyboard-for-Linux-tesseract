@@ -10,9 +10,25 @@ var out: HTMLElement = document.getElementById('results')
 async function recognizeText() {
     // if (can.drawing)
     // @ts-ignore
+    // mycan.toBlob(async (blob) => {
+    //     let reader = new FileReader();
+    //     reader.readAsDataURL(blob);
+    //     reader.onloadend = function () {
+    //         // console.log(reader.result);
+    //         console.log(reader.result.split('base64,')[1]);
+    //         invoke('recognize_text', {base64Image: reader.result.split('base64,')[1]}).then((response) => { 
+    //             console.log(response.slice(0, -2));
+    //             displayRecognizedText(response.slice(0, -2), null); 
+    //         }).catch((err) => { displayRecognizedText("", err) });
+    //     }
+    //     // console.log(blob);
+    //     // var rr = await blob.text();
+    //     // console.log(rr);
+    //     // invoke('recognize_text', {base64Image: rr}).then((response) => { displayRecognizedText(response.slice(0, -2), null); }).catch((err) => { displayRecognizedText("", err) });
+    // });
     var image_data = await mycan.toDataURL().split('base64,')[1];
     // @ts-ignore
-    await invoke('recognize_text', {base64Image: image_data}).then((response) => { displayRecognizedText(response.slice(0, -2), null); }).catch((err) => { displayRecognizedText("", err) });
+    await invoke('recognize_text', {base64Image: image_data}).then((response) => { console.log(response); displayRecognizedText(response.slice(0, -2), null); }).catch((err) => { displayRecognizedText("", err) });
 }
 
 function displayRecognizedText(text: any, err: any) {

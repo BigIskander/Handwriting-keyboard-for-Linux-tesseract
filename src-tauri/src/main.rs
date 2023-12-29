@@ -11,24 +11,26 @@ use std::collections::HashMap;
 
 #[tauri::command]
 fn recognize_text(base_64_image: String) -> String {
+    // println!("{base_64_image}");
     let vec8_image = decode(base_64_image).unwrap();
     let dynamic_image = load_from_memory(&vec8_image).unwrap();
-    let image = Image::from_dynamic_image(&dynamic_image).unwrap();
-    let my_args = Args {
-        lang: "chi_all".to_string(),
-        config_variables: HashMap::new(),
-        dpi: Some(
-            96,
-        ),
-        psm: Some(
-            13,
-        ),
-        oem: Some(
-            3,
-        ),
-    };
-    let output = image_to_string(&image, &my_args).unwrap();
-    return output;
+    // let image = Image::from_dynamic_image(&dynamic_image).unwrap(); // slow function
+    return  "respond...".to_string();
+    // let my_args = Args {
+    //     lang: "chi_all".to_string(),
+    //     config_variables: HashMap::new(),
+    //     dpi: Some(
+    //         96,
+    //     ),
+    //     psm: Some(
+    //         13,
+    //     ),
+    //     oem: Some(
+    //         3,
+    //     ),
+    // };
+    // let output = image_to_string(&image, &my_args).unwrap();
+    // return output;
 }
 
 fn main() {
