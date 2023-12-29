@@ -11,7 +11,7 @@ async function recognizeText() {
     // @ts-ignore
     var image_data = await mycan.toDataURL().split('base64,')[1];
     // @ts-ignore
-    await invoke('recognize_text', {base64Image: image_data}).then((response) => { console.log(response); displayRecognizedText(response.slice(0, -2), null); }).catch((err) => { displayRecognizedText("", err) });
+    await invoke('recognize_text', {base64Image: image_data}).then((response) => { displayRecognizedText(response.slice(0, -2), null); }).catch((err) => { displayRecognizedText("", err) });
 }
 
 function displayRecognizedText(text: any, err: any) {

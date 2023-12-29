@@ -5,29 +5,17 @@
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
 use base64::decode;
-use image::load_from_memory;
-use rusty_tesseract::{Args, Image, image_to_string};
-use std::collections::HashMap;
+use std::io::{Write};
+use std::process::{Command, Stdio};
 
 #[tauri::command]
 fn recognize_text(base_64_image: String) -> String {
     let vec8_image = decode(base_64_image).unwrap();
-    let dynamic_image = load_from_memory(&vec8_image).unwrap();
-    let image = Image::from_dynamic_image(&dynamic_image).unwrap();  
-    let my_args = Args {
-        lang: "chi_all".to_string(),
-        config_variables: HashMap::new(),
-        dpi: Some(
-            96,
-        ),
-        psm: Some(
-            13,
-        ),
-        oem: Some(
-            3,
-        ),
-    };
-    let output = image_to_string(&image, &my_args).unwrap();
+    let mut comm_exec = Command::new("tesseract").args(["-l", "chi_all", "--dpi", "96", "--psm", "13", "--oem", "3", "-", "stdout"]).stdin(Stdio::piped()).stdout(Stdio::piped()).spawn().expect("Error: can't call tesseract");
+    let comm_stdin = comm_exec.stdin.as_mut().expect("Error: can't connect to tesseract stdin");
+    comm_stdin.write_all(&vec8_image).expect("Error: can't write to tesseract stdin");
+    let comm_output = comm_exec.wait_with_output().expect("Error: can't get tesseract output");
+    let output = String::from_utf8_lossy(&comm_output.stdout).to_string();
     return output;
 }
 
