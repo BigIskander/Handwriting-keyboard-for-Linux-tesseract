@@ -3,13 +3,16 @@ import { appWindow, LogicalSize, LogicalPosition } from '@tauri-apps/api/window'
 import { invoke } from '@tauri-apps/api/tauri';
 import { writeText } from '@tauri-apps/api/clipboard';
 // @ts-ignore
-var out: HTMLElement = document.getElementById('results')
+var out: HTMLElement = document.getElementById('results');
+// @ts-ignore
+var recognize_button: HTMLElement = document.getElementById('recognize_button');
 
 async function recognizeText() {
     // @ts-ignore
     var image_data = await mycan.toDataURL().split('base64,')[1];
     // @ts-ignore
     await invoke('recognize_text', {base64Image: image_data}).then((response) => { displayRecognizedText(response.slice(0, -2), null); }).catch((err) => { displayRecognizedText("", err) });
+    recognize_button.style.fontWeight = "normal";
 }
 
 function displayRecognizedText(text: any, err: any) {
@@ -43,13 +46,16 @@ window.onresize = () => {
 
 // @ts-ignore
 var can = new handwriting.Canvas(mycan);
-can.setMouseUpCallBack(() => recognizeText());
+// can.setMouseUpCallBack(() => recognizeText());
+
+can.setMouseUpCallBack(() => { recognize_button.style.fontWeight = "bold" });
 //Set line width shown on the canvas element (default: 3)
 can.setLineWidth(5);
 
 function erase() {
     can.erase();
     out.innerHTML = "";
+    recognize_button.style.fontWeight = "normal";
 }
 
 async function choseWord(word: String) {
@@ -59,5 +65,6 @@ async function choseWord(word: String) {
 
 export {
     erase,
-    choseWord
+    choseWord,
+    recognizeText
 }

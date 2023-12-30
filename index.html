@@ -8,7 +8,7 @@
     <script>
       var choseWord
       var erase
-      var test_me
+      var recognizeText
     </script>
     <script type="module" src="/src/handwriting.canvas.js"></script>
     <script type="module" defer>
@@ -16,13 +16,16 @@
         var main = await import("/src/main.ts");
         choseWord = main.choseWord;
         erase = main.erase;
-        test_me = main.test_me;
+        recognizeText = main.recognizeText;
       })();
     </script>
   </head>
   <body>
     <div id="results" class="selectWordPanel"></div>
     <div><canvas id="can" width="1000" height="200" style="border: 1px solid; cursor: crosshair;"></canvas></div>
-    <div style="margin-bottom: 5px; text-align: right;"><a onclick="choseWord(' ')" class="internalLink" href="JavaScript:void(0);" >Пробел.</a><a onclick="erase()" href="JavaScript:void(0);" class="internalLinkRed">Очистить.</a></div>
+    <div style="margin-bottom: 5px; margin-top: 15px; display:grid; grid-template-columns: 1fr 1fr;">
+      <div id="recognize_button" style="margin-left: 15px; text-align: left; font-weight: normal;"><a onclick="recognizeText()" class="internalLinkGreen" href="JavaScript:void(0);" >Распознать.</a></div>
+      <div style="text-align: right;"><a onclick="choseWord(' ')" class="internalLink" href="JavaScript:void(0);" >Пробел.</a><a onclick="erase()" href="JavaScript:void(0);" class="internalLinkRed">Очистить.</a></div>
+    </div>
   </body>
 </html>
