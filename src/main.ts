@@ -2,8 +2,6 @@ import { currentMonitor } from '@tauri-apps/api/window';
 import { appWindow, LogicalSize, LogicalPosition } from '@tauri-apps/api/window';
 import { invoke } from '@tauri-apps/api/tauri';
 import { writeText } from '@tauri-apps/api/clipboard';
-import { Command } from "@tauri-apps/api/shell";
-const pasteword = new Command("xdotool", ['key', "--delay", "100", 'alt+Tab', 'ctrl+v']);
 // @ts-ignore
 var out: HTMLElement = document.getElementById('results')
 
@@ -47,7 +45,7 @@ window.onresize = () => {
 var can = new handwriting.Canvas(mycan);
 can.setMouseUpCallBack(() => recognizeText());
 //Set line width shown on the canvas element (default: 3)
-can.setLineWidth(3);
+can.setLineWidth(5);
 
 function erase() {
     can.erase();
@@ -56,8 +54,7 @@ function erase() {
 
 async function choseWord(word: String) {
     await writeText(String(word));
-    pasteword.spawn();
-    erase();
+    await invoke('paste_text').then(() => { erase(); }).catch((err) => { displayRecognizedText("", err); });
 }
 
 export {

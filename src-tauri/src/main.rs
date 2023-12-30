@@ -24,9 +24,19 @@ fn recognize_text(base_64_image: String) -> Result<String, String> {
     return Ok(output);
 }
 
+#[tauri::command]
+fn paste_text() -> Result<(), String> {
+    let comm_exec = Command::new("xdotool").args(["key", "--delay", "100", "alt+Tab", "ctrl+v"]).output().map_err(|err| "Xdotool call, Error: ".to_string() + &err.to_string())?;
+    let comm_output_stderr = String::from_utf8_lossy(&comm_exec.stderr).to_string();
+    if comm_output_stderr != "" {
+        return Err("Xdotool call, Error: ".to_string() + &comm_output_stderr);
+    }
+    return Ok(());
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![recognize_text])
+        .invoke_handler(tauri::generate_handler![recognize_text, paste_text])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

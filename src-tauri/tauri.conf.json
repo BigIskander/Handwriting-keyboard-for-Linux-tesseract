@@ -18,17 +18,6 @@
         "setPosition": true,
         "setSize": true
       },
-      "shell": {
-        "all": false,
-        "execute": true,
-        "scope": [
-          {
-            "name": "xdotool",
-            "cmd": "xdotool",
-            "args": ["key", "--delay", "100", "alt+Tab", "ctrl+v"]
-          }
-        ]
-      },
       "clipboard": {
         "all": false,
         "readText": false,
@@ -47,10 +36,10 @@
         "icons/icon.ico"
       ],
       "deb": {
-        "depends": ["xdotool"]
+        "depends": ["xdotool", "tesseract"]
       },
       "category": "Education",
-      "longDescription": "Handwriting keyboard for Linux X11 desktop environment. \n\n Currently supports Chinese language only. \n\n To recognize handwritten pattern program uses Google API. \n\n Github page: \n\n https://github.com/BigIskander/Handwriting-keyboard-for-Linux./tree/main",
+      "longDescription": "Handwriting keyboard for Linux X11 desktop environment. \n\n Currently supports Chinese language only. \n\n To recognize handwritten pattern program uses Google API. \n\n Github page: \n\n https://github.com/BigIskander/Handwriting-keyboard-for-Linux./tree/tesseract_experimental",
       "shortDescription": "Handwriting keyboard for Linux."
     },
     "security": {
