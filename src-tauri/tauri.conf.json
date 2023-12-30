@@ -24,6 +24,23 @@
         "writeText": true
       }
     },
+    "cli": {
+      "description": "",
+      "longDescription": "",
+      "beforeHelp": "",
+      "afterHelp": "", 
+      "args": [
+        {
+          "name": "tessdata-dir",
+          "takesValue": true
+        },
+        {
+          "name": "lang",
+          "short": "l",
+          "takesValue": true
+        }
+      ]
+    },
     "bundle": {
       "active": true,
       "targets": "all",
