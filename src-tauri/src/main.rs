@@ -5,18 +5,23 @@
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
 use base64::decode;
-use std::io::{Write};
+use std::io::Write;
 use std::process::{Command, Stdio};
 
 #[tauri::command]
-fn recognize_text(base_64_image: String) -> String {
+fn recognize_text(base_64_image: String) -> Result<String, String> {
     let vec8_image = decode(base_64_image).unwrap();
-    let mut comm_exec = Command::new("tesseract").args(["-l", "chi_all", "--dpi", "96", "--psm", "13", "--oem", "3", "-", "stdout"]).stdin(Stdio::piped()).stdout(Stdio::piped()).spawn().expect("Error: can't call tesseract");
-    let comm_stdin = comm_exec.stdin.as_mut().expect("Error: can't connect to tesseract stdin");
-    comm_stdin.write_all(&vec8_image).expect("Error: can't write to tesseract stdin");
-    let comm_output = comm_exec.wait_with_output().expect("Error: can't get tesseract output");
+    let mut comm_exec = Command::new("tesseract").args(["-l", "chi_all", "--dpi", "96", "--psm", "13", "--oem", "3", "-", "stdout"]).stdin(Stdio::piped()).stderr(Stdio::piped()).stdout(Stdio::piped()).spawn().map_err(|err| "Tesseract api call, Error: ".to_string() + &err.to_string())?;
+    let comm_stdin = comm_exec.stdin.as_mut().unwrap();
+    comm_stdin.write_all(&vec8_image).unwrap();
+    drop(comm_stdin);
+    let comm_output = comm_exec.wait_with_output().unwrap();
+    let comm_output_stderr = String::from_utf8_lossy(&comm_output.stderr).to_string();
+    if comm_output_stderr != "" {
+        return Err("Tesseract api call, Error: ".to_string() + &comm_output_stderr);
+    }
     let output = String::from_utf8_lossy(&comm_output.stdout).to_string();
-    return output;
+    return Ok(output);
 }
 
 fn main() {
