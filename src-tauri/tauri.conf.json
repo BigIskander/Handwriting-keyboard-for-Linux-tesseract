@@ -7,7 +7,7 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "handwriting-keyboard",
+    "productName": "hw-keyboard-t",
     "version": "1.0.0"
   },
   "tauri": {
@@ -58,7 +58,7 @@
         "icons/icon.ico"
       ],
       "deb": {
-        "depends": ["xdotool", "tesseract"]
+        "depends": ["xdotool", "tesseract-ocr"]
       },
       "category": "Education",
       "longDescription": "Handwriting keyboard for Linux X11 desktop environment. \n\n Currently supports Chinese language only. \n\n To recognize handwritten pattern program uses Google API. \n\n Github page: \n\n https://github.com/BigIskander/Handwriting-keyboard-for-Linux./tree/tesseract_experimental",
