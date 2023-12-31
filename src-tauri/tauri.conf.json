@@ -38,6 +38,11 @@
           "name": "lang",
           "short": "l",
           "takesValue": true
+        },
+        {
+          "name": "automode",
+          "short": "a",
+          "takesValue": false
         }
       ]
     },

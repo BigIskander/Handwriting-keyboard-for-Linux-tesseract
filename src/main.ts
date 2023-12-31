@@ -2,6 +2,7 @@ import { currentMonitor } from '@tauri-apps/api/window';
 import { appWindow, LogicalSize, LogicalPosition } from '@tauri-apps/api/window';
 import { invoke } from '@tauri-apps/api/tauri';
 import { writeText } from '@tauri-apps/api/clipboard';
+import { getMatches } from '@tauri-apps/api/cli'
 // @ts-ignore
 var out: HTMLElement = document.getElementById('results');
 // @ts-ignore
@@ -27,6 +28,13 @@ var offset = 20;
 var voffset = 100;
 var bottom_offset = 40;
 (async () => {
+    var args = await getMatches();
+    if (args.args.automode.value == true) {
+        recognize_button.innerHTML = "";
+        can.setMouseUpCallBack(() => recognizeText());
+    } else {
+        can.setMouseUpCallBack(() => { recognize_button.style.fontWeight = "bold" });
+    }
     const monitor = await currentMonitor();
     if (monitor) {
         await appWindow.setSize(new LogicalSize(monitor.size.width, 300));
@@ -46,9 +54,6 @@ window.onresize = () => {
 
 // @ts-ignore
 var can = new handwriting.Canvas(mycan);
-// can.setMouseUpCallBack(() => recognizeText());
-
-can.setMouseUpCallBack(() => { recognize_button.style.fontWeight = "bold" });
 //Set line width shown on the canvas element (default: 3)
 can.setLineWidth(5);
 
