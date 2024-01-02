@@ -238,6 +238,9 @@ SOFTWARE.
         imageObj.src = url;
     }
 
+    // this function to call Google API is not used
+    // tesseract-ocr API used instead
+    /*
     handwriting.recognize = function(trace, options, callback) {
         if (handwriting.Canvas && this instanceof handwriting.Canvas) {
             trace = this.trace;
@@ -292,6 +295,6 @@ SOFTWARE.
         xhr.open("POST", "https://www.google.com/inputtools/request?ime=handwriting&app=mobilesearch&cs=1&oe=UTF-8");
         xhr.setRequestHeader("content-type", "application/json");
         xhr.send(data);
-    };
+    };*/
 
 })(window, document);
