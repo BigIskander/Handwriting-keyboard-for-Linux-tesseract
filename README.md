@@ -56,6 +56,8 @@ Run program in development environment with cli (command line) parameters: <code
 
 Compile the programm: <code>npm run tauri build</code>
 
+Older version of this program using Google API instead of tesseract-ocr: [https://github.com/BigIskander/Handwriting-keyboard-for-Linux.](https://github.com/BigIskander/Handwriting-keyboard-for-Linux.)
+
 ## Recommended IDE Setup
 
 - [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
