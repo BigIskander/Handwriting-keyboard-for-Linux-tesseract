@@ -42,7 +42,7 @@ In this case (above), to recognize hand written pattern programm will use traini
 
 Programm written by using tauri framework https://tauri.app/
 
-Program based on script from https://github.com/ChenYuHo/handwriting.js
+Uses script from https://github.com/ChenYuHo/handwriting.js as writing canvas.
 
 To recognize handwritten pattern program uses tesseract-ocr.
 
@@ -51,6 +51,8 @@ In order to run from code or compile the programm: You need to install [Node.js 
 Install Node.js dependencies: <code>npm istall</code>
 
 Run program in development environment: <code>npm run tauri dev</code>
+
+Run program in development environment with cli (command line) parameters: <code>npm run tauri dev -- -- -- cli_parameters</code>
 
 Compile the programm: <code>npm run tauri build</code>
 
