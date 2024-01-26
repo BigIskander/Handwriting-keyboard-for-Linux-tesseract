@@ -22,7 +22,7 @@ Or alternatively you can put these files in watever folder you like and run prog
 
 By default program uses language <b>chi_all</b>, which you can download from this source [https://github.com/gumblex/tessdata_chi](https://github.com/gumblex/tessdata_chi), or you can select desired language by running program with cli parameter <code>--lang</code> and set language.
 
-4) Launch the program with or without cli parameters <code>handwriting-keyboard-t</code>. And just use it.
+4) Launch the program with or without cli parameters <code>handwriting-keyboard-t</code> and just use it.
 
 # CLI (command line interface) parameters
 
@@ -36,7 +36,7 @@ Example:
 
 <code>handwriting-keyboard-t --tessdata-dir=/home/user/ --lang=chi_sim -a</code>
 
-In this case (above), to recognize hand written pattern programm will use training data from folder "<b>/home/user/</b>" and language "<b>chi_sim</b>" (Chinese simplified), particularly the file "<b>/home/user/file chi_sim.traineddata</b>". And also automatically send data to tesseract-ocr after every stroke, because program was launched with "<b>-a</b>" parameter.
+In this case (above), to recognize hand written pattern programm will use training data from folder "<b>/home/user/</b>" and language "<b>chi_sim</b>" (Chinese simplified), particularly the file "<b>/home/user/chi_sim.traineddata</b>". And also automatically send data to tesseract-ocr after every stroke, because program was launched with "<b>-a</b>" parameter.
 
 # Some technical details
 
