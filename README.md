@@ -14,7 +14,7 @@ You can find compiled .deb package in releases page.
 
 <code>sudo apt install tesseract-ocr</code>
 
-2) Install programm (you can find compiled .dep package in releases page)
+2) Install programm (you can find compiled <b>.deb</b> package in releases page)
 
 3) Download training data for tesseract-ocr and copy training data files to data folder of tesseract-ocr (for example for tesseract-ocr 4.0 it would be ths folder <b>/usr/share/tesseract-ocr/4.00/tessdata/</b>).
 
