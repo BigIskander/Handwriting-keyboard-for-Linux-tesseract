@@ -18,7 +18,7 @@ async function recognizeText() {
 
 function displayRecognizedText(text: any, err: any) {
     if(err) {
-        out.innerHTML = '<div v-else class="errorMessage">' + err + '</div>'
+        out.innerHTML = '<div class="errorMessage">' + err + '</div>'
     } else {
         out.innerHTML = '<div class="selectWordItem" onclick="choseWord(\'' + text + '\')">' + text + '</div>';
     }
