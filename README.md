@@ -16,7 +16,7 @@ You can find compiled .deb package in releases page.
 
 2) Install programm (you can find compiled <b>.deb</b> package in releases page)
 
-3) Download training data for tesseract-ocr and copy training data files to data folder of tesseract-ocr (for example for tesseract-ocr 4.0 it would be ths folder <b>/usr/share/tesseract-ocr/4.00/tessdata/</b>).
+3) Download training data for tesseract-ocr and copy training data files to data folder of tesseract-ocr (for example for tesseract-ocr 4.0 it would be this folder <b>/usr/share/tesseract-ocr/4.00/tessdata/</b>).
 
 Or alternatively you can put these files in watever folder you like and run program with <code>--tessdata-dir</code> cli parameter and point to the folder where training data files are located.
 
@@ -36,7 +36,7 @@ Example:
 
 <code>handwriting-keyboard-t --tessdata-dir=/home/user/ --lang=chi_sim -a</code>
 
-In this case (above), to recognize hand written pattern programm will use training data from folder "<b>/home/user/</b>" and language "<b>chi_sim</b>" (Chinese simplified), particularly the file "<b>/home/user/chi_sim.traineddata</b>". And also automatically send data to tesseract-ocr after every stroke, because program was launched with "<b>-a</b>" parameter.
+In this case (above), to recognize hand written pattern programm will use training data from folder "<b>/home/user/</b>" and language "<b>chi_sim</b>" (Chinese simplified), particularly the file "<b>/home/user/chi_sim.traineddata</b>". Also in this case the programm will automatically send request to tesseract-ocr after every stroke, because it was launched with "<b>-a</b>" parameter.
 
 # Some technical details
 
