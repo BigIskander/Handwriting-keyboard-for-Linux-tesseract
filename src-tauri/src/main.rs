@@ -38,7 +38,7 @@ fn recognize_text(base_64_image: String) -> Result<String, String> {
     }
     // call tesseract, send image via stdio and get results
     let mut comm_exec = Command::new("tesseract").args(comm_args).stdin(Stdio::piped()).stderr(Stdio::piped()).stdout(Stdio::piped()).spawn().map_err(|err| "Tesseract api call, Error: ".to_string() + &err.to_string())?;
-    let comm_stdin = comm_exec.stdin.as_mut().unwrap();
+    let mut comm_stdin = comm_exec.stdin.take().unwrap();
     comm_stdin.write_all(&vec8_image).unwrap();
     drop(comm_stdin);
     let comm_output = comm_exec.wait_with_output().unwrap();
