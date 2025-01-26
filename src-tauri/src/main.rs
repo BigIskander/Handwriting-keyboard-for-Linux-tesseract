@@ -65,6 +65,10 @@ fn main() {
         .setup(|app| {
             match app.get_cli_matches() {
                 Ok(matches) => {
+                    println!("Handwriting keyboard for Linux X11 desktop environment. \n\
+                                To recognize handwritten pattern program uses tesseract-ocr. \n\
+                                Github page: \n\
+                                https://github.com/BigIskander/Handwriting-keyboard-for-Linux-tesseract");
                     let cli_tessdata_dir = &matches.args.get("tessdata-dir").expect("Error reading CLI.").value;
                     if cli_tessdata_dir.is_string() {
                         TESSDATA_DIR.lock().unwrap().insert_str(0, cli_tessdata_dir.as_str().expect("Error reading CLI."));
