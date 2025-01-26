@@ -14,6 +14,8 @@ You can find compiled .deb package in releases page.
 
 <code>sudo apt install tesseract-ocr</code>
 
+**Note:** I would recommend to install tesseract 4 (instead of tesseract 5). Because the results is the most accurate when using with tesseract 4 (at least for recognition of text (writing) in Chinese language).
+
 2) Install programm (you can find compiled <b>.deb</b> package in releases page)
 
 3) Download training data for tesseract-ocr and copy training data files to data folder of tesseract-ocr (for example for tesseract-ocr 4.0 it would be this folder <b>/usr/share/tesseract-ocr/4.00/tessdata/</b>).
