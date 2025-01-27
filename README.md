@@ -4,7 +4,7 @@ This is programm written for Linux X11 desktop environment.
 
 To recognize handwritten pattern program uses tesseract-ocr.
 
-You can find compiled .deb package in releases page.
+You can find compiled .deb and .AppImage packages in releases page.
 
 # How to use
 
