@@ -63,10 +63,12 @@ fn paste_text() -> Result<(), String> {
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
-            println!("Handwriting keyboard for Linux X11 desktop environment. \n\
-                    To recognize handwritten pattern program uses tesseract-ocr. \n\
-                    Github page: \n\
-                    https://github.com/BigIskander/Handwriting-keyboard-for-Linux-tesseract");
+            println!("-------------------------------------------------------------------------------\n\
+                        Handwriting keyboard for Linux X11 desktop environment. \n\
+                        To recognize handwritten pattern program uses tesseract-ocr. \n\
+                        Github page: \n\
+                        https://github.com/BigIskander/Handwriting-keyboard-for-Linux-tesseract \n\
+                      -------------------------------------------------------------------------------");
             match app.get_cli_matches() {
                 Ok(matches) => {
                     let cli_tessdata_dir = &matches.args.get("tessdata-dir").expect("Error reading CLI.").value;
