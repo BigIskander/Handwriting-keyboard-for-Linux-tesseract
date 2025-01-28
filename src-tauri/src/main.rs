@@ -30,7 +30,7 @@ fn recognize_text(base_64_image: String) -> Result<String, String> {
     if !cli_lang.is_empty() { 
         lang = cli_lang.to_string(); 
     }
-    let mut comm_args = ["-l", &lang, "--dpi", "96", "--psm", "13", "--oem", "3", "-", "stdout"].to_vec();
+    let mut comm_args = ["-l", &lang, "--dpi", "96", "--psm", "7", "--oem", "3", "-", "stdout"].to_vec();
     let cli_tessdata_dir = TESSDATA_DIR.lock().unwrap();
     if !cli_tessdata_dir.is_empty() {
         comm_args.insert(0, "--tessdata-dir");
