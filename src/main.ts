@@ -12,7 +12,7 @@ async function recognizeText() {
     // @ts-ignore
     var image_data = await mycan.toDataURL().split('base64,')[1];
     // @ts-ignore
-    await invoke('recognize_text', {base64Image: image_data}).then((response) => { displayRecognizedText(response.replace(/(?:\r\n|\r|\n|\t)/g, ' ').replace(/(?:\s\s+)/g, ' ').trim().slice(0, -1), null); }).catch((err) => { displayRecognizedText("", err) });
+    await invoke('recognize_text', {base64Image: image_data}).then((response) => { displayRecognizedText(response.replace(/(?:\r\n|\r|\n|\t)/g, ' ').replace(/(?:\s\s+)/g, ' ').trim(), null); }).catch((err) => { displayRecognizedText("", err) });
     recognize_button.style.fontWeight = "normal";
 }
 
