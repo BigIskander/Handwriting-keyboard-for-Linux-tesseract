@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "handwriting-keyboard-t",
-    "version": "1.1.1"
+    "version": "1.2.0"
   },
   "tauri": {
     "allowlist": {
@@ -42,6 +42,18 @@
         {
           "name": "automode",
           "short": "a",
+          "takesValue": false
+        },
+        {
+          "name": "not-return-focus",
+          "takesValue": false
+        },
+        {
+          "name": "debug",
+          "takesValue": false
+        },
+        {
+          "name": "use-clipboard",
           "takesValue": false
         }
       ]
