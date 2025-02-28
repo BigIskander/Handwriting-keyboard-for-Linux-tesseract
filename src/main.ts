@@ -27,6 +27,7 @@ function displayRecognizedText(text: any, err: any) {
 var offset = 20;
 var voffset = 100;
 var bottom_offset = 40;
+var use_clipboard = false;
 (async () => {
     var args = await getMatches();
     if (args.args.automode.value == true) {
@@ -40,6 +41,12 @@ var bottom_offset = 40;
         await appWindow.setSize(new LogicalSize(monitor.size.width, 300));
         await appWindow.setPosition(new LogicalPosition(monitor.position.x, monitor.position.y + monitor.size.height - window.outerHeight - bottom_offset));
     }
+    if(args.args["not-return-focus"].value == false) {
+        document.addEventListener("mouseup", () => { invoke('alt_tab'); });
+        document.addEventListener("touchend", () => { invoke('alt_tab'); });
+        if(await appWindow.isFocused()) invoke('alt_tab');
+    }
+    use_clipboard = Boolean(args.args["use_clipboard"].value);
 })();
 // @ts-ignore
 var mycan: HTMLElement = document.getElementById('can');
@@ -64,8 +71,9 @@ function erase() {
 }
 
 async function choseWord(word: String) {
-    await writeText(String(word));
-    await invoke('paste_text').then(() => { erase(); }).catch((err) => { displayRecognizedText("", err); });
+    var in_focus = await appWindow.isFocused();
+    if(use_clipboard == true) await writeText(String(word));
+    await invoke('write_text', { text: word, inFocus: in_focus, useClipboard: use_clipboard }).then(() => { erase(); }).catch((err) => { displayRecognizedText("", err); });
 }
 
 export {

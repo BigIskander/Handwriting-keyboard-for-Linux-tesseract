@@ -21,6 +21,12 @@ static LANG: Mutex<String> = {
     Mutex::new(lang)
 };
 
+// debug, i.e. output errors to console or not [value read from CLI]
+static DEBUG: Mutex<String> = {
+    let debug = String::new();
+    Mutex::new(debug)
+};
+
 #[tauri::command]
 fn recognize_text(base_64_image: String) -> Result<String, String> {
     let vec8_image = decode(base_64_image).unwrap();
@@ -44,6 +50,10 @@ fn recognize_text(base_64_image: String) -> Result<String, String> {
     let comm_output = comm_exec.wait_with_output().unwrap();
     let comm_output_stderr = String::from_utf8_lossy(&comm_output.stderr).to_string();
     if comm_output_stderr != "" {
+        let debug = DEBUG.lock().unwrap();
+        if !debug.is_empty() {
+            println!("Xdotool call, Error: {}", &comm_output_stderr);
+        }
         return Err("Tesseract api call, Error: ".to_string() + &comm_output_stderr);
     }
     let output = String::from_utf8_lossy(&comm_output.stdout).to_string();
@@ -51,13 +61,41 @@ fn recognize_text(base_64_image: String) -> Result<String, String> {
 }
 
 #[tauri::command]
-fn paste_text() -> Result<(), String> {
-    let comm_exec = Command::new("xdotool").args(["key", "--delay", "100", "alt+Tab", "ctrl+v"]).output().map_err(|err| "Xdotool call, Error: ".to_string() + &err.to_string())?;
+fn write_text(text: String, in_focus: bool, use_clipboard: bool) -> Result<(), String> {
+    let mut comm_args = [].to_vec();
+    if in_focus {
+        comm_args.append(&mut ["key", "--delay", "100", "alt+Tab"].to_vec());       
+    }
+    if use_clipboard {
+        if !in_focus {
+            comm_args.append(&mut ["key", "--delay", "100"].to_vec());
+        }
+        comm_args.append(&mut ["ctrl+v"].to_vec());
+    } else {
+        comm_args.append(&mut ["type", "--delay", "300", &text].to_vec());
+    }
+    let comm_exec = Command::new("xdotool").args(comm_args).output().map_err(|err| "Xdotool call, Error: ".to_string() + &err.to_string())?;
     let comm_output_stderr = String::from_utf8_lossy(&comm_exec.stderr).to_string();
     if comm_output_stderr != "" {
+        let debug = DEBUG.lock().unwrap();
+        if !debug.is_empty() {
+            println!("Xdotool call, Error: {}", &comm_output_stderr);
+        }
         return Err("Xdotool call, Error: ".to_string() + &comm_output_stderr);
     }
     return Ok(());
+}
+
+#[tauri::command]
+fn alt_tab() {
+    let comm_exec = Command::new("xdotool").args(["key", "--delay", "100", "alt+Tab"]).output().map_err(|err| "Xdotool call, Error: ".to_string() + &err.to_string()).unwrap();
+    let comm_output_stderr = String::from_utf8_lossy(&comm_exec.stderr).to_string();
+    if comm_output_stderr != "" {
+        let debug = DEBUG.lock().unwrap();
+        if !debug.is_empty() {
+            println!("Xdotool call, Error: {}", &comm_output_stderr);
+        }
+    }
 }
 
 fn main() {
@@ -68,6 +106,7 @@ fn main() {
                         To recognize handwritten pattern program uses tesseract-ocr. \n\
                         Github page: \n\
                         https://github.com/BigIskander/Handwriting-keyboard-for-Linux-tesseract \n\
+                        App version: 1.2.0 \n\
                       -------------------------------------------------------------------------------");
             match app.get_cli_matches() {
                 Ok(matches) => {
@@ -79,12 +118,16 @@ fn main() {
                     if cli_lang.is_string() {
                         LANG.lock().unwrap().insert_str(0, cli_lang.as_str().expect("Error reading CLI."));
                     }
+                    let debug = &matches.args.get("lang").expect("Error reading CLI.").value;
+                    if debug == true {
+                        DEBUG.lock().unwrap().insert_str(0, "ok");
+                    }
                 }
                 Err(_) => {}
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![recognize_text, paste_text])
+        .invoke_handler(tauri::generate_handler![recognize_text, write_text, alt_tab])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
