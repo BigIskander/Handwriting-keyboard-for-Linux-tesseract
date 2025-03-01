@@ -4,10 +4,10 @@
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
-use std::sync::Mutex;
 use base64::decode;
 use std::io::Write;
 use std::process::{Command, Stdio};
+use std::sync::Mutex;
 
 // languages traindata dir for tesseract [value read from CLI]
 static TESSDATA_DIR: Mutex<String> = {
@@ -33,17 +33,26 @@ fn recognize_text(base_64_image: String) -> Result<String, String> {
     // working with CLI parameters
     let cli_lang = LANG.lock().unwrap();
     let mut lang = "chi_all".to_string();
-    if !cli_lang.is_empty() { 
-        lang = cli_lang.to_string(); 
+    if !cli_lang.is_empty() {
+        lang = cli_lang.to_string();
     }
-    let mut comm_args = ["-l", &lang, "--dpi", "96", "--psm", "7", "--oem", "3", "-", "stdout"].to_vec();
+    let mut comm_args = [
+        "-l", &lang, "--dpi", "96", "--psm", "7", "--oem", "3", "-", "stdout",
+    ]
+    .to_vec();
     let cli_tessdata_dir = TESSDATA_DIR.lock().unwrap();
     if !cli_tessdata_dir.is_empty() {
         comm_args.insert(0, "--tessdata-dir");
         comm_args.insert(1, &cli_tessdata_dir);
     }
     // call tesseract, send image via stdio and get results
-    let mut comm_exec = Command::new("tesseract").args(comm_args).stdin(Stdio::piped()).stderr(Stdio::piped()).stdout(Stdio::piped()).spawn().map_err(|err| "Tesseract api call, Error: ".to_string() + &err.to_string())?;
+    let mut comm_exec = Command::new("tesseract")
+        .args(comm_args)
+        .stdin(Stdio::piped())
+        .stderr(Stdio::piped())
+        .stdout(Stdio::piped())
+        .spawn()
+        .map_err(|err| "Tesseract api call, Error: ".to_string() + &err.to_string())?;
     let mut comm_stdin = comm_exec.stdin.take().unwrap();
     comm_stdin.write_all(&vec8_image).unwrap();
     drop(comm_stdin);
@@ -64,7 +73,7 @@ fn recognize_text(base_64_image: String) -> Result<String, String> {
 fn write_text(text: String, in_focus: bool, use_clipboard: bool) -> Result<(), String> {
     let mut comm_args = [].to_vec();
     if in_focus {
-        comm_args.append(&mut ["key", "--delay", "100", "alt+Tab"].to_vec());       
+        comm_args.append(&mut ["key", "--delay", "100", "alt+Tab"].to_vec());
     }
     if use_clipboard {
         if !in_focus {
@@ -74,7 +83,10 @@ fn write_text(text: String, in_focus: bool, use_clipboard: bool) -> Result<(), S
     } else {
         comm_args.append(&mut ["type", "--delay", "300", &text].to_vec());
     }
-    let comm_exec = Command::new("xdotool").args(comm_args).output().map_err(|err| "Xdotool call, Error: ".to_string() + &err.to_string())?;
+    let comm_exec = Command::new("xdotool")
+        .args(comm_args)
+        .output()
+        .map_err(|err| "Xdotool call, Error: ".to_string() + &err.to_string())?;
     let comm_output_stderr = String::from_utf8_lossy(&comm_exec.stderr).to_string();
     if comm_output_stderr != "" {
         let debug = DEBUG.lock().unwrap();
@@ -88,7 +100,11 @@ fn write_text(text: String, in_focus: bool, use_clipboard: bool) -> Result<(), S
 
 #[tauri::command]
 fn alt_tab() {
-    let comm_exec = Command::new("xdotool").args(["key", "--delay", "100", "alt+Tab"]).output().map_err(|err| "Xdotool call, Error: ".to_string() + &err.to_string()).unwrap();
+    let comm_exec = Command::new("xdotool")
+        .args(["key", "--delay", "100", "alt+Tab"])
+        .output()
+        .map_err(|err| "Xdotool call, Error: ".to_string() + &err.to_string())
+        .unwrap();
     let comm_output_stderr = String::from_utf8_lossy(&comm_exec.stderr).to_string();
     if comm_output_stderr != "" {
         let debug = DEBUG.lock().unwrap();
@@ -99,7 +115,10 @@ fn alt_tab() {
 }
 
 fn main() {
+    use tauri_plugin_cli::CliExt;
     tauri::Builder::default()
+        .plugin(tauri_plugin_clipboard_manager::init())
+        .plugin(tauri_plugin_cli::init())
         .setup(|app| {
             println!("-------------------------------------------------------------------------------\n\
                         Handwriting keyboard for Linux X11 desktop environment. \n\
@@ -108,7 +127,7 @@ fn main() {
                         https://github.com/BigIskander/Handwriting-keyboard-for-Linux-tesseract \n\
                         App version: 1.2.0 \n\
                       -------------------------------------------------------------------------------");
-            match app.get_cli_matches() {
+            match app.cli().matches() {
                 Ok(matches) => {
                     let cli_tessdata_dir = &matches.args.get("tessdata-dir").expect("Error reading CLI.").value;
                     if cli_tessdata_dir.is_string() {

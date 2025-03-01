@@ -2,33 +2,41 @@
   "build": {
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
-    "devPath": "http://localhost:1420",
-    "distDir": "../dist",
-    "withGlobalTauri": true
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420"
   },
-  "package": {
-    "productName": "handwriting-keyboard-t",
-    "version": "1.2.0"
-  },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "window": {
-        "all": false,
-        "setPosition": true,
-        "setSize": true
-      },
-      "clipboard": {
-        "all": false,
-        "readText": false,
-        "writeText": true
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "shortDescription": "Handwriting keyboard for Linux.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "longDescription": "Handwriting keyboard for Linux X11 desktop environment. \n\n To recognize handwritten pattern program uses tesseract-ocr. \n\n Github page: \n\n https://github.com/BigIskander/Handwriting-keyboard-for-Linux-tesseract",
+    "category": "Education",
+    "linux": {
+      "deb": {
+        "depends": [
+          "xdotool",
+          "tesseract-ocr"
+        ]
       }
-    },
+    }
+  },
+  "productName": "handwriting-keyboard-t",
+  "mainBinaryName": "handwriting-keyboard-t",
+  "version": "1.2.0",
+  "identifier": "com.handwriting-keyboard-t.dev",
+  "plugins": {
     "cli": {
       "description": "",
       "longDescription": "",
       "beforeHelp": "",
-      "afterHelp": "", 
+      "afterHelp": "",
       "args": [
         {
           "name": "tessdata-dir",
@@ -61,28 +69,10 @@
           "takesValue": false
         }
       ]
-    },
-    "bundle": {
-      "active": true,
-      "targets": "all",
-      "identifier": "com.handwriting-keyboard-t.dev",
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ],
-      "deb": {
-        "depends": ["xdotool", "tesseract-ocr"]
-      },
-      "category": "Education",
-      "longDescription": "Handwriting keyboard for Linux X11 desktop environment. \n\n To recognize handwritten pattern program uses tesseract-ocr. \n\n Github page: \n\n https://github.com/BigIskander/Handwriting-keyboard-for-Linux-tesseract",
-      "shortDescription": "Handwriting keyboard for Linux."
-    },
-    "security": {
-      "csp": null
-    },
+    }
+  },
+  "app": {
+    "withGlobalTauri": true,
     "windows": [
       {
         "fullscreen": false,
@@ -92,8 +82,12 @@
         "height": 300,
         "minWidth": 800,
         "minHeight": 300,
-        "alwaysOnTop": true
+        "alwaysOnTop": true,
+        "useHttpsScheme": true
       }
-    ]
+    ],
+    "security": {
+      "csp": null
+    }
   }
 }
