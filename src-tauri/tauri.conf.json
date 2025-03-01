@@ -63,6 +63,10 @@
         {
           "name": "use-clipboard",
           "takesValue": false
+        },
+        {
+          "name": "dark-theme",
+          "takesValue": false
         }
       ]
     }

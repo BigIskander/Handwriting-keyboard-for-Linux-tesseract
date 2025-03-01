@@ -1,3 +1,16 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.content {
+    width: 100vw;
+    height: 100vh;
+}
+.dark .content {
+    background-color: black;
+    color: white;
+}
 .selectWordPanel {
     display: flex; 
     flex-direction:row; 
@@ -12,9 +25,15 @@
     padding-right: 5px;
     background-color: aliceblue;
 }
+.dark .selectWordItem {
+    background-color: #444;
+}
 .selectWordItem:hover {
     background-color: lightblue;
     cursor: pointer;
+}
+.dark .selectWordItem:hover {
+    background-color: #222;
 }
 .errorMessage {
     color: red;
@@ -30,20 +49,41 @@
     margin-right: 10px;
     text-decoration: none;
 }
+.dark .internalLink, .dark .internalLinkRed, .dark .internalLinkGreen {
+    color: rgb(191, 224, 234);
+    box-shadow: 0px 2px #BBB;
+}
 .internalLink:hover {
     box-shadow: 0px 2px darkblue;
 }
+.dark .internalLink:hover {
+    box-shadow: 0px 2px #FFF;
+}
 .internalLinkRed {
     color: crimson;
+}
+.dark .internalLinkRed {
+    color: rgb(255, 97, 97);
 }
 .internalLinkRed:hover {
     color: red;
     box-shadow: 0px 2px darkred;
 }
+.dark .internalLinkRed:hover {
+    color: red;
+    box-shadow: 0px 2px white;
+}
 .internalLinkGreen {
     color: darkgreen;
+}
+.dark .internalLinkGreen {
+    color: rgb(122, 198, 122);
 }
 .internalLinkGreen:hover {
     color: darkgreen;
     box-shadow: 0px 2px darkgreen;
+}
+.dark .internalLinkGreen:hover {
+    color: rgb(122, 198, 122);
+    box-shadow: 0px 2px white;
 }
