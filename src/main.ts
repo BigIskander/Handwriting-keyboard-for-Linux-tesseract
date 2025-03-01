@@ -1,8 +1,10 @@
 import { currentMonitor } from '@tauri-apps/api/window';
-import { appWindow, LogicalSize, LogicalPosition } from '@tauri-apps/api/window';
-import { invoke } from '@tauri-apps/api/tauri';
-import { writeText } from '@tauri-apps/api/clipboard';
-import { getMatches } from '@tauri-apps/api/cli'
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
+import { LogicalSize, LogicalPosition } from '@tauri-apps/api/dpi';
+import { invoke } from '@tauri-apps/api/core';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
+import { getMatches } from '@tauri-apps/plugin-cli';
+const appWindow = getCurrentWebviewWindow();
 // @ts-ignore
 var out: HTMLElement = document.getElementById('results');
 // @ts-ignore
