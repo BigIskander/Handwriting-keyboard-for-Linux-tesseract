@@ -8,6 +8,9 @@ use base64::decode;
 use std::io::Write;
 use std::process::{Command, Stdio};
 use std::sync::Mutex;
+use std::io::Cursor;
+use image::ImageReader;
+use image::imageops::colorops;
 
 // languages traindata dir for tesseract [value read from CLI]
 static TESSDATA_DIR: Mutex<String> = {
@@ -29,7 +32,15 @@ static DEBUG: Mutex<String> = {
 
 #[tauri::command]
 fn recognize_text(base_64_image: String) -> Result<String, String> {
-    let vec8_image = decode(base_64_image).unwrap();
+    let mut vec8_image = decode(base_64_image).unwrap();
+    // invert color
+    let temp2 = Cursor::new(vec8_image.clone());
+    let mut img2 = ImageReader::new(temp2).with_guessed_format().unwrap().decode().unwrap();
+    colorops::invert(&mut img2);
+    let mut temp3 = Cursor::new(Vec::new());
+    img2.write_to(&mut temp3, image::ImageFormat::Png).unwrap();
+    let b = temp3.get_ref();
+    vec8_image = b.to_vec();
     // working with CLI parameters
     let cli_lang = LANG.lock().unwrap();
     let mut lang = "chi_all".to_string();
