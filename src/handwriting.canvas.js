@@ -36,7 +36,7 @@ SOFTWARE.
 
     root.handwriting = handwriting;
 
-    handwriting.Canvas = function(cvs, lineWidth, isDarkTheme = true) {
+    handwriting.Canvas = function(cvs, lineWidth) {
         this.canvas = cvs;
         this.cxt = cvs.getContext("2d");
         this.cxt.lineCap = "round";
@@ -66,8 +66,10 @@ SOFTWARE.
         this.callback = undefined;
         this.mouseUpCallBack = undefined;
         this.recognize = handwriting.recognize;
-
-        if(isDarkTheme) this.cxt.strokeStyle = "white";
+        // to change stroke color for dark theme
+        this.setStrokeColor = function(color) {
+            this.cxt.strokeStyle = color;
+        }
     };
     /**
      * [toggle_Undo_Redo description]

@@ -63,6 +63,7 @@ var can;
     // setting up writing canvas
     // @ts-ignore
     can = new handwriting.Canvas(mycan, is_dark_theme);
+    if(is_dark_theme) can.setStrokeColor("white");
     //Set line width shown on the canvas element (default: 3)
     can.setLineWidth(5);
     window.onresize = () => { 
@@ -72,6 +73,8 @@ var can;
         can.height = window.outerHeight - voffset;
         // @ts-ignore
         can.width = window.outerWidth - offset;
+        // @ts-ignore
+        if(is_dark_theme) can.setStrokeColor("white");
     };
     if (args.args.automode.value == true) {
         recognize_button.innerHTML = "";
@@ -91,13 +94,6 @@ var can;
         if(await appWindow.isFocused()) invoke('alt_tab');
     }
     use_clipboard = Boolean(args.args["use-clipboard"].value);
-    // workaround, canvas stroke color not applying without reload
-    if(is_dark_theme) {
-        if(!sessionStorage.getItem("reloaded")) {
-            sessionStorage.setItem("reloaded", "ok");
-            window.location.reload();
-        }
-    }
 })();
 
 function erase() {
