@@ -91,6 +91,13 @@ var can;
         if(await appWindow.isFocused()) invoke('alt_tab');
     }
     use_clipboard = Boolean(args.args["use-clipboard"].value);
+    // workaround, canvas stroke color not applying without reload
+    if(is_dark_theme) {
+        if(!sessionStorage.getItem("reloaded")) {
+            sessionStorage.setItem("reloaded", "ok");
+            window.location.reload();
+        }
+    }
 })();
 
 function erase() {
