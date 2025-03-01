@@ -11,26 +11,10 @@ var out: HTMLElement = document.getElementById('results');
 var recognize_button: HTMLElement = document.getElementById('recognize_button');
 
 async function recognizeText() {
-    if(!is_dark_theme) {
-        // @ts-ignore
-        var image_data = await mycan.toDataURL().split('base64,')[1];
-    } else {
-        //Inverse image colors for dark theme
-        var tempCanvas = document.createElement("canvas");
-        // @ts-ignore
-        tempCanvas.setAttribute("width", mycan.width);
-        // @ts-ignore
-        tempCanvas.setAttribute("height", mycan.height);
-        var tempContext = tempCanvas.getContext("2d");
-        // @ts-ignore
-        tempContext.filter = "invert(1)";
-        // @ts-ignore
-        tempContext.drawImage(mycan, 0, 0);
-        var image_data = await tempCanvas.toDataURL().split('base64,')[1];
-        tempCanvas.remove();
-    }
     // @ts-ignore
-    await invoke('recognize_text', {base64Image: image_data}).then((response) => { displayRecognizedText(response.replace(/(?:\r\n|\r|\n|\t)/g, ' ').replace(/(?:\s\s+)/g, ' ').trim(), null); }).catch((err) => { displayRecognizedText("", err) });
+    var image_data = await mycan.toDataURL().split('base64,')[1];
+    // @ts-ignore
+    await invoke('recognize_text', { base64Image: image_data, isDarkTheme: is_dark_theme }).then((response) => { displayRecognizedText(response.replace(/(?:\r\n|\r|\n|\t)/g, ' ').replace(/(?:\s\s+)/g, ' ').trim(), null); }).catch((err) => { displayRecognizedText("", err) });
     recognize_button.style.fontWeight = "normal";
 }
 

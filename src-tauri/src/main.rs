@@ -31,16 +31,17 @@ static DEBUG: Mutex<String> = {
 };
 
 #[tauri::command]
-fn recognize_text(base_64_image: String) -> Result<String, String> {
+fn recognize_text(base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
     let mut vec8_image = decode(base_64_image).unwrap();
-    // invert color
-    let temp2 = Cursor::new(vec8_image.clone());
-    let mut img2 = ImageReader::new(temp2).with_guessed_format().unwrap().decode().unwrap();
-    colorops::invert(&mut img2);
-    let mut temp3 = Cursor::new(Vec::new());
-    img2.write_to(&mut temp3, image::ImageFormat::Png).unwrap();
-    let b = temp3.get_ref();
-    vec8_image = b.to_vec();
+    if is_dark_theme {
+        // invert color
+        let cursor_image = Cursor::new(vec8_image.clone());
+        let mut image = ImageReader::new(cursor_image).with_guessed_format().unwrap().decode().unwrap();
+        colorops::invert(&mut image);
+        let mut cursor_image2 = Cursor::new(Vec::new());
+        image.write_to(&mut cursor_image2, image::ImageFormat::Png).unwrap();
+        vec8_image = cursor_image2.get_ref().to_vec();
+    }
     // working with CLI parameters
     let cli_lang = LANG.lock().unwrap();
     let mut lang = "chi_all".to_string();
