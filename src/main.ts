@@ -59,7 +59,11 @@ var can;
     var args = await getMatches();
     // is_dark_theme = Boolean(args.args["dark-theme"].value);
     // switch to dark theme
-    if(is_dark_theme) document.body.className = 'dark'
+    if(is_dark_theme) {
+        document.body.className = 'dark';
+        document.body.style.backgroundColor = "black";
+        document.body.style.color = "white";
+    }
     // setting up writing canvas
     // @ts-ignore
     can = new handwriting.Canvas(mycan, is_dark_theme);
