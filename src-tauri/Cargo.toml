@@ -21,6 +21,7 @@ tauri-plugin-clipboard-manager = "2"
 image = "0.25.5"
 gif = "=0.13.1"
 regex = "1.11.1"
+gtk = "0.18.2"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

@@ -70,18 +70,28 @@ var can;
     } else {
         can.setMouseUpCallBack(() => { recognize_button.style.fontWeight = "bold" });
     }
+    // 
     // resize window size on launch
     const monitor = await currentMonitor();
     if (monitor) {
-        await appWindow.setSize(new LogicalSize(monitor.size.width, 300));
-        await appWindow.setPosition(new LogicalPosition(monitor.position.x, monitor.position.y + monitor.size.height - window.outerHeight - bottom_offset));
+        appWindow.setSize(new LogicalSize(monitor.size.width, 300)); //
+        // appWindow.center();
+        
+        appWindow.setPosition(new LogicalPosition(
+            monitor.position.x, monitor.position.y + monitor.size.height - 300 //- window.innerHeight - window.outerHeight
+        )); // - bottom_offset));
     }
     if(args.args["not-return-focus"].value == false) {
-        document.addEventListener("mouseup", () => { invoke('alt_tab'); });
-        document.addEventListener("touchend", () => { invoke('alt_tab'); });
-        if(await appWindow.isFocused()) invoke('alt_tab');
+        // document.addEventListener("mouseup", () => { invoke('alt_tab'); });
+        // document.addEventListener("touchend", () => { invoke('alt_tab'); });
+        // if(await appWindow.isFocused()) invoke('alt_tab'); // workaround to return focus to previous active window
     }
     use_clipboard = Boolean(args.args["use-clipboard"].value);
+    // // workaround to properly position window on launch
+    // if(!localStorage.getItem("is_reloaded")) {
+    //     window.location.reload();
+    //     localStorage.setItem("is_reloaded", "yes");
+    // }
 })();
 
 function erase() {

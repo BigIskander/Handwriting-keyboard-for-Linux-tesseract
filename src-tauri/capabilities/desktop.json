@@ -6,9 +6,11 @@
     "linux"
   ],
   "windows": [
-    "main"
+    "main",
+    "local"
   ],
   "permissions": [
-    "cli:default"
+    "cli:default",
+    "core:window:allow-close"
   ]
 }

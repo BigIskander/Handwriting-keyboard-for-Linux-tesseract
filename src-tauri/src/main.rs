@@ -5,6 +5,9 @@
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
 use std::sync::Mutex;
+use tauri_plugin_cli::CliExt;
+use gtk::{prelude::GtkWindowExt, traits::WidgetExt};
+use tauri::Manager;
 
 mod ocr;
 mod sendinput;
@@ -44,7 +47,6 @@ fn alt_tab() {
 }
 
 fn main() {
-    use tauri_plugin_cli::CliExt;
     tauri::Builder::default()
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_cli::init())
@@ -73,9 +75,48 @@ fn main() {
                 }
                 Err(_) => {}
             }
+            // let old_window = app.get_webview_window("main").unwrap();
+            // old_window.close()?;
+
+            // let window = tauri::webview::WebviewWindowBuilder::from_config(app, &app.config()
+            // .app
+            // .windows
+            // .get(0)
+            // .unwrap()
+            // .clone());
+            // println!("app config:");
+            // println!("{:?}", &app.config().app.windows.get(0).unwrap());
+            // .unwrap()
+            // .build()
+            // .unwrap();
+            let window = tauri::webview::WebviewWindowBuilder::new(app, "local", tauri::WebviewUrl::App("keyboard.html".into())).build().unwrap();
+            // let window = app.get_webview_window("手写").unwrap();
+            window.set_title("手写")?;
+            window.set_always_on_top(true)?;
+            // window.set_skip_taskbar(true)?;
+            let gtk_window = window.gtk_window().unwrap();
+            gtk_window.set_accept_focus(false);
+            // gtk_window.set_default_size(800, 300);
+            // gtk_window.set_size_request(800, 300);
+            // // gtk_window.set_focus_visible(false);
+            // gtk_window.set_focus_on_map(false);
+            window.show()?;
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![recognize_text, write_text, alt_tab])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+
+//"windows": [
+    // {
+    //     "focus": false,
+    //     "title": "手写",
+    //     "width": 800,
+    //     "height": 300,
+    //     "minWidth": 800,
+    //     "minHeight": 300,
+    //     "alwaysOnTop": true,
+    //     "useHttpsScheme": true
+    //   }
+    // ],
