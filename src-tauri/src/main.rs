@@ -4,13 +4,10 @@
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
-use base64::decode;
-use std::io::Write;
-use std::process::{Command, Stdio};
 use std::sync::Mutex;
-use std::io::Cursor;
-use image::ImageReader;
-use image::imageops::colorops;
+
+mod ocr;
+mod sendinput;
 
 // languages traindata dir for tesseract [value read from CLI]
 static TESSDATA_DIR: Mutex<String> = {
@@ -32,98 +29,17 @@ static DEBUG: Mutex<String> = {
 
 #[tauri::command]
 fn recognize_text(base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
-    let mut vec8_image = decode(base_64_image).unwrap();
-    if is_dark_theme {
-        // invert color
-        let cursor_image = Cursor::new(vec8_image.clone());
-        let mut image = ImageReader::new(cursor_image).with_guessed_format().unwrap().decode().unwrap();
-        colorops::invert(&mut image);
-        let mut cursor_image2 = Cursor::new(Vec::new());
-        image.write_to(&mut cursor_image2, image::ImageFormat::Png).unwrap();
-        vec8_image = cursor_image2.get_ref().to_vec();
-    }
-    // working with CLI parameters
-    let cli_lang = LANG.lock().unwrap();
-    let mut lang = "chi_all".to_string();
-    if !cli_lang.is_empty() {
-        lang = cli_lang.to_string();
-    }
-    let mut comm_args = [
-        "-l", &lang, "--dpi", "96", "--psm", "7", "--oem", "3", "-", "stdout",
-    ]
-    .to_vec();
-    let cli_tessdata_dir = TESSDATA_DIR.lock().unwrap();
-    if !cli_tessdata_dir.is_empty() {
-        comm_args.insert(0, "--tessdata-dir");
-        comm_args.insert(1, &cli_tessdata_dir);
-    }
-    // call tesseract, send image via stdio and get results
-    let mut comm_exec = Command::new("tesseract")
-        .args(comm_args)
-        .stdin(Stdio::piped())
-        .stderr(Stdio::piped())
-        .stdout(Stdio::piped())
-        .spawn()
-        .map_err(|err| "Tesseract api call, Error: ".to_string() + &err.to_string())?;
-    let mut comm_stdin = comm_exec.stdin.take().unwrap();
-    comm_stdin.write_all(&vec8_image).unwrap();
-    drop(comm_stdin);
-    let comm_output = comm_exec.wait_with_output().unwrap();
-    let comm_output_stderr = String::from_utf8_lossy(&comm_output.stderr).to_string();
-    if comm_output_stderr != "" {
-        let debug = DEBUG.lock().unwrap();
-        if !debug.is_empty() {
-            println!("Xdotool call, Error: {}", &comm_output_stderr);
-        }
-        return Err("Tesseract api call, Error: ".to_string() + &comm_output_stderr);
-    }
-    let output = String::from_utf8_lossy(&comm_output.stdout).to_string();
-    return Ok(output);
+    return ocr::tesseract_ocr_recognize_text(base_64_image, is_dark_theme);
 }
 
 #[tauri::command]
 fn write_text(text: String, in_focus: bool, use_clipboard: bool) -> Result<(), String> {
-    let mut comm_args = [].to_vec();
-    if in_focus {
-        comm_args.append(&mut ["key", "--delay", "100", "alt+Tab"].to_vec());
-    }
-    if use_clipboard {
-        if !in_focus {
-            comm_args.append(&mut ["key", "--delay", "100"].to_vec());
-        }
-        comm_args.append(&mut ["ctrl+v"].to_vec());
-    } else {
-        comm_args.append(&mut ["type", "--delay", "300", &text].to_vec());
-    }
-    let comm_exec = Command::new("xdotool")
-        .args(comm_args)
-        .output()
-        .map_err(|err| "Xdotool call, Error: ".to_string() + &err.to_string())?;
-    let comm_output_stderr = String::from_utf8_lossy(&comm_exec.stderr).to_string();
-    if comm_output_stderr != "" {
-        let debug = DEBUG.lock().unwrap();
-        if !debug.is_empty() {
-            println!("Xdotool call, Error: {}", &comm_output_stderr);
-        }
-        return Err("Xdotool call, Error: ".to_string() + &comm_output_stderr);
-    }
-    return Ok(());
+    return sendinput::write_text(text, in_focus, use_clipboard);
 }
 
 #[tauri::command]
 fn alt_tab() {
-    let comm_exec = Command::new("xdotool")
-        .args(["key", "--delay", "100", "alt+Tab"])
-        .output()
-        .map_err(|err| "Xdotool call, Error: ".to_string() + &err.to_string())
-        .unwrap();
-    let comm_output_stderr = String::from_utf8_lossy(&comm_exec.stderr).to_string();
-    if comm_output_stderr != "" {
-        let debug = DEBUG.lock().unwrap();
-        if !debug.is_empty() {
-            println!("Xdotool call, Error: {}", &comm_output_stderr);
-        }
-    }
+    sendinput::alt_tab();
 }
 
 fn main() {
@@ -149,7 +65,7 @@ fn main() {
                     if cli_lang.is_string() {
                         LANG.lock().unwrap().insert_str(0, cli_lang.as_str().expect("Error reading CLI."));
                     }
-                    let debug = &matches.args.get("lang").expect("Error reading CLI.").value;
+                    let debug = &matches.args.get("debug").expect("Error reading CLI.").value;
                     if debug == true {
                         DEBUG.lock().unwrap().insert_str(0, "ok");
                     }
