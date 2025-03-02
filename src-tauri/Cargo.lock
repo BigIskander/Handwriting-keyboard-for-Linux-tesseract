@@ -1471,6 +1471,7 @@ dependencies = [
  "base64 0.21.7",
  "gif",
  "image",
+ "regex",
  "serde",
  "serde_json",
  "tauri",
