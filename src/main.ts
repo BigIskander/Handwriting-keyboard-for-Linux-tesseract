@@ -30,7 +30,7 @@ var offset = 20;
 var voffset = 100;
 var bottom_offset = 40;
 var use_clipboard = false;
-var is_dark_theme = true;
+var is_dark_theme = false;
 
 // @ts-ignore
 var mycan: HTMLElement = document.getElementById('can');
@@ -41,7 +41,7 @@ var can;
 
 (async () => {
     var args = await getMatches();
-    // is_dark_theme = Boolean(args.args["dark-theme"].value);
+    is_dark_theme = Boolean(args.args["dark-theme"].value);
     // switch to dark theme
     if(is_dark_theme) {
         document.body.className = 'dark';
