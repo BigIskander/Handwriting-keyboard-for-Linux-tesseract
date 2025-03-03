@@ -14,7 +14,14 @@ async function recognizeText() {
     // @ts-ignore
     var image_data = await mycan.toDataURL().split('base64,')[1];
     // @ts-ignore
-    await invoke('recognize_text', { base64Image: image_data, isDarkTheme: is_dark_theme }).then((response) => { displayRecognizedText(response.replace(/(?:\r\n|\r|\n|\t)/g, ' ').replace(/(?:\s\s+)/g, ' ').trim(), null); }).catch((err) => { displayRecognizedText("", err) });
+    await invoke('recognize_text', { 
+        base64Image: image_data, isDarkTheme: is_dark_theme 
+    }).then((response) => { 
+        // @ts-ignore
+        displayRecognizedText(response.replace(/(?:\r\n|\r|\n|\t)/g, ' ').replace(/(?:\s\s+)/g, ' ').trim(), null); 
+    }).catch((err) => { 
+        displayRecognizedText("", err) 
+    });
     recognize_button.style.fontWeight = "normal";
 }
 
@@ -81,17 +88,16 @@ var can;
             monitor.position.x, monitor.position.y + monitor.size.height - window.outerHeight - bottom_offset
         ));
     }
-    if(args.args["not-return-focus"].value == false) {
-        // document.addEventListener("mouseup", () => { invoke('alt_tab'); });
-        // document.addEventListener("touchend", () => { invoke('alt_tab'); });
-        // if(await appWindow.isFocused()) invoke('alt_tab'); // workaround to return focus to previous active window
-    }
     use_clipboard = Boolean(args.args["use-clipboard"].value);
-    // // workaround to properly position window on launch
-    // if(!localStorage.getItem("is_reloaded")) {
-    //     window.location.reload();
-    //     localStorage.setItem("is_reloaded", "yes");
-    // }
+    if(args.args["return-focus"].value == false) {
+        document.addEventListener("mouseup", async () => { 
+            if(await appWindow.isFocused()) invoke('alt_tab'); 
+        });
+        document.addEventListener("touchend", async () => { 
+            if(await appWindow.isFocused()) invoke('alt_tab'); 
+        });
+        if(await appWindow.isFocused()) invoke('alt_tab'); // workaround to return focus to previous active window
+    }
 })();
 
 function erase() {
@@ -104,7 +110,9 @@ function erase() {
 async function choseWord(word: String) {
     var in_focus = await appWindow.isFocused();
     if(use_clipboard == true) await writeText(String(word));
-    await invoke('write_text', { text: word, inFocus: in_focus, useClipboard: use_clipboard }).then(() => { erase(); }).catch((err) => { displayRecognizedText("", err); });
+    await invoke('write_text', { 
+        text: word, inFocus: in_focus, useClipboard: use_clipboard 
+    }).then(() => { erase(); }).catch((err) => { displayRecognizedText("", err); });
 }
 
 export {
