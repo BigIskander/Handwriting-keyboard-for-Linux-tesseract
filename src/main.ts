@@ -89,7 +89,7 @@ var can;
         }
     }
     use_clipboard = Boolean(args.args["use-clipboard"].value);
-    if(args.args["return-focus"].value == false) {
+    if(args.args["return-focus"].value == true && args.args["skip-taskbar"].value == false) {
         document.addEventListener("mouseup", async () => { 
             if(await appWindow.isFocused()) invoke('alt_tab'); 
         });

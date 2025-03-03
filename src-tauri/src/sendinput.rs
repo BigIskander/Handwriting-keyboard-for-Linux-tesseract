@@ -2,10 +2,12 @@ use std::process::Command;
 
 // import global variables
 use crate::DEBUG;
+use crate::SKIP_TASKBAR;
 
 pub fn write_text(text: String, in_focus: bool, use_clipboard: bool) -> Result<(), String> {
     let mut comm_args = [].to_vec();
-    if in_focus {
+    let skip_taskbar = SKIP_TASKBAR.lock().unwrap();
+    if in_focus && skip_taskbar.is_empty() {
         comm_args.append(&mut ["key", "--delay", "100", "alt+Tab"].to_vec());
     }
     if use_clipboard {
