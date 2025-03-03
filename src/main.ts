@@ -78,8 +78,8 @@ var can;
         // appWindow.center();
         
         appWindow.setPosition(new LogicalPosition(
-            monitor.position.x, monitor.position.y + monitor.size.height - 300 //- window.innerHeight - window.outerHeight
-        )); // - bottom_offset));
+            monitor.position.x, monitor.position.y + monitor.size.height - window.outerHeight - bottom_offset
+        ));
     }
     if(args.args["not-return-focus"].value == false) {
         // document.addEventListener("mouseup", () => { invoke('alt_tab'); });

@@ -8,6 +8,7 @@ use std::sync::Mutex;
 use tauri_plugin_cli::CliExt;
 use gtk::prelude::GtkWindowExt;
 use tauri::{window::Color, Manager};
+use tauri::LogicalSize;
 
 mod ocr;
 mod sendinput;
@@ -50,11 +51,14 @@ fn alt_tab() {
 fn open_keyboard_window(app: tauri::AppHandle) {
     let url = tauri::WebviewUrl::App("keyboard.html".into());
     let window = tauri::webview::WebviewWindowBuilder::new(&app, "local", url).build().unwrap();
-    _ = window.set_title("手写").unwrap();
-    _ = window.set_always_on_top(true).unwrap();
+    window.set_title("手写").unwrap();
+    window.set_always_on_top(true).unwrap();
+    let min_size: LogicalSize<u32> = tauri::LogicalSize::from((800, 300));
+    window.set_min_size(Some(min_size)).unwrap();
+    window.set_size(min_size).unwrap();
     let gtk_window = window.gtk_window().unwrap();
     gtk_window.set_accept_focus(false);
-    _ = window.show().unwrap();
+    window.show().unwrap();
 }
 
 fn main() {
@@ -87,7 +91,7 @@ fn main() {
                     }
                     let dark_theme = &matches.args.get("dark-theme").expect("Error reading CLI.").value;
                     if dark_theme == true {
-                        _ = main_window.set_background_color(Some(Color(0, 0, 0, 0))).unwrap();
+                        main_window.set_background_color(Some(Color(0, 0, 0, 0))).unwrap();
                     }
                 }
                 Err(_) => {}
