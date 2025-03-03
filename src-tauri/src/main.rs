@@ -6,8 +6,8 @@
 
 use std::sync::Mutex;
 use tauri_plugin_cli::CliExt;
-use gtk::{prelude::GtkWindowExt, traits::WidgetExt};
-use tauri::Manager;
+use gtk::prelude::GtkWindowExt;
+use tauri::{window::Color, Manager};
 
 mod ocr;
 mod sendinput;
@@ -46,6 +46,17 @@ fn alt_tab() {
     sendinput::alt_tab();
 }
 
+#[tauri::command]
+fn open_keyboard_window(app: tauri::AppHandle) {
+    let url = tauri::WebviewUrl::App("keyboard.html".into());
+    let window = tauri::webview::WebviewWindowBuilder::new(&app, "local", url).build().unwrap();
+    _ = window.set_title("手写").unwrap();
+    _ = window.set_always_on_top(true).unwrap();
+    let gtk_window = window.gtk_window().unwrap();
+    gtk_window.set_accept_focus(false);
+    _ = window.show().unwrap();
+}
+
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_clipboard_manager::init())
@@ -58,6 +69,8 @@ fn main() {
                         https://github.com/BigIskander/Handwriting-keyboard-for-Linux-tesseract \n\
                         App version: 1.2.0 \n\
                       -------------------------------------------------------------------------------");
+            // panic!("panic panic");
+            let main_window = app.get_webview_window("main").unwrap();
             match app.cli().matches() {
                 Ok(matches) => {
                     let cli_tessdata_dir = &matches.args.get("tessdata-dir").expect("Error reading CLI.").value;
@@ -72,51 +85,17 @@ fn main() {
                     if debug == true {
                         DEBUG.lock().unwrap().insert_str(0, "ok");
                     }
+                    let dark_theme = &matches.args.get("dark-theme").expect("Error reading CLI.").value;
+                    if dark_theme == true {
+                        _ = main_window.set_background_color(Some(Color(0, 0, 0, 0))).unwrap();
+                    }
                 }
                 Err(_) => {}
             }
-            // let old_window = app.get_webview_window("main").unwrap();
-            // old_window.close()?;
-
-            // let window = tauri::webview::WebviewWindowBuilder::from_config(app, &app.config()
-            // .app
-            // .windows
-            // .get(0)
-            // .unwrap()
-            // .clone());
-            // println!("app config:");
-            // println!("{:?}", &app.config().app.windows.get(0).unwrap());
-            // .unwrap()
-            // .build()
-            // .unwrap();
-            let window = tauri::webview::WebviewWindowBuilder::new(app, "local", tauri::WebviewUrl::App("keyboard.html".into())).build().unwrap();
-            // let window = app.get_webview_window("手写").unwrap();
-            window.set_title("手写")?;
-            window.set_always_on_top(true)?;
-            // window.set_skip_taskbar(true)?;
-            let gtk_window = window.gtk_window().unwrap();
-            gtk_window.set_accept_focus(false);
-            // gtk_window.set_default_size(800, 300);
-            // gtk_window.set_size_request(800, 300);
-            // // gtk_window.set_focus_visible(false);
-            // gtk_window.set_focus_on_map(false);
-            window.show()?;
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![recognize_text, write_text, alt_tab])
+        .invoke_handler(tauri::generate_handler![recognize_text, write_text, alt_tab, open_keyboard_window])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
-//"windows": [
-    // {
-    //     "focus": false,
-    //     "title": "手写",
-    //     "width": 800,
-    //     "height": 300,
-    //     "minWidth": 800,
-    //     "minHeight": 300,
-    //     "alwaysOnTop": true,
-    //     "useHttpsScheme": true
-    //   }
-    // ],
