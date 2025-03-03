@@ -31,6 +31,18 @@ static DEBUG: Mutex<String> = {
     Mutex::new(debug)
 };
 
+// skip taskbar? [value read from CLI]
+static SKIP_TASKBAR: Mutex<String> = {
+    let skip = String::new();
+    Mutex::new(skip)
+};
+
+// dark theme? [value read from CLI]
+static DARK_THEME: Mutex<String> = {
+    let dark_theme = String::new();
+    Mutex::new(dark_theme)
+};
+
 #[tauri::command]
 fn recognize_text(base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
     return ocr::paddle_ocr_recognize_text(base_64_image, is_dark_theme);
@@ -56,6 +68,14 @@ fn open_keyboard_window(app: tauri::AppHandle) {
     let min_size: LogicalSize<u32> = tauri::LogicalSize::from((800, 300));
     window.set_min_size(Some(min_size)).unwrap();
     window.set_size(min_size).unwrap();
+    let skip_taskbar = SKIP_TASKBAR.lock().unwrap();
+    if !skip_taskbar.is_empty() {
+        window.set_skip_taskbar(true).unwrap();
+    }
+    let dark_theme = DARK_THEME.lock().unwrap();
+    if !dark_theme.is_empty() {
+        window.set_background_color(Some(Color(0, 0, 0, 0))).unwrap();
+    }
     let gtk_window = window.gtk_window().unwrap();
     gtk_window.set_accept_focus(false);
     window.show().unwrap();
@@ -92,6 +112,12 @@ fn main() {
                     let dark_theme = &matches.args.get("dark-theme").expect("Error reading CLI.").value;
                     if dark_theme == true {
                         main_window.set_background_color(Some(Color(0, 0, 0, 0))).unwrap();
+                        DARK_THEME.lock().unwrap().insert_str(0, "ok");
+                    }
+                    let skip_taskbar = &matches.args.get("skip-taskbar").expect("Error reading CLI.").value;
+                    if skip_taskbar == true {
+                        main_window.set_skip_taskbar(true).unwrap();
+                        SKIP_TASKBAR.lock().unwrap().insert_str(0, "ok");
                     }
                 }
                 Err(_) => {}

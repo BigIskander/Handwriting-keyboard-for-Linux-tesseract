@@ -77,16 +77,16 @@ var can;
     } else {
         can.setMouseUpCallBack(() => { recognize_button.style.fontWeight = "bold" });
     }
-    // 
-    // resize window size on launch
+    // change window size and position on launch
     const monitor = await currentMonitor();
     if (monitor) {
-        appWindow.setSize(new LogicalSize(monitor.size.width, 300)); //
-        // appWindow.center();
-        
-        appWindow.setPosition(new LogicalPosition(
-            monitor.position.x, monitor.position.y + monitor.size.height - window.outerHeight - bottom_offset
-        ));
+        // appWindow.center(); // this function not working
+        if(args.args["fly-to-bottom"].value == true) {
+            appWindow.setSize(new LogicalSize(monitor.size.width, 300));
+            appWindow.setPosition(new LogicalPosition(
+                monitor.position.x, monitor.position.y + monitor.size.height - window.outerHeight - bottom_offset
+            ));
+        }
     }
     use_clipboard = Boolean(args.args["use-clipboard"].value);
     if(args.args["return-focus"].value == false) {

@@ -53,6 +53,14 @@
           "takesValue": false
         },
         {
+          "name": "skip-taskbar",
+          "takesValue": false
+        },
+        {
+          "name": "fly-to-bottom",
+          "takesValue": false
+        },
+        {
           "name": "return-focus",
           "takesValue": false
         },
