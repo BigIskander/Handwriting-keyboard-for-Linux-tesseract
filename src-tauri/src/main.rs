@@ -79,6 +79,7 @@ fn open_keyboard_window(app: tauri::AppHandle) {
     let gtk_window = window.gtk_window().unwrap();
     gtk_window.set_accept_focus(false);
     window.show().unwrap();
+    app.get_webview_window("main").unwrap().close().unwrap();
 }
 
 fn main() {
@@ -122,6 +123,7 @@ fn main() {
                 }
                 Err(_) => {}
             }
+            // main_window.hide().unwrap();
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![recognize_text, write_text, alt_tab, open_keyboard_window])
