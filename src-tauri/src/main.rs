@@ -59,10 +59,15 @@ fn alt_tab() {
     sendinput::alt_tab();
 }
 
+// workaround
+// set_accept_focus(false) property doesn't work in main window
 #[tauri::command]
 fn open_keyboard_window(app: tauri::AppHandle) {
     let url = tauri::WebviewUrl::App("keyboard.html".into());
-    let window = tauri::webview::WebviewWindowBuilder::new(&app, "local", url).build().unwrap();
+    let window = tauri::webview::WebviewWindowBuilder::new(&app, "local", url)
+    .use_https_scheme(true)
+    .build()
+    .unwrap();
     window.set_title("手写").unwrap();
     window.set_always_on_top(true).unwrap();
     let min_size: LogicalSize<u32> = tauri::LogicalSize::from((800, 300));
