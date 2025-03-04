@@ -84,55 +84,59 @@ pub fn tesseract_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) 
 }
 
 pub fn paddle_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
+    let debug = DEBUG.lock().unwrap();
+    if !debug.is_empty() {
+        println!("Recognizing text using Paddle OCR.");
+    }
     let mut vec8_image = decode(base_64_image).unwrap();
     if is_dark_theme {
+        if !debug.is_empty() {
+            println!("Inverting image colors.");
+        }
         // invert color
         vec8_image = invert_colors(vec8_image);
     }
     let cursor_image = Cursor::new(vec8_image.clone());
     let image = ImageReader::new(cursor_image).with_guessed_format().unwrap().decode().unwrap();
-    _ = image.save("/tmp/temp_image.png").map_err(|err| "Can't save temp image file: ".to_string() + &err.to_string());
+    let image_path = "/tmp/temp_image.png";
+    if !debug.is_empty() {
+        println!("Saving canvas as temporary image file: {}", image_path);
+    }
+    image.save(image_path).map_err(|err| "Can't save canvas as temporary file: ".to_string() + &err.to_string())?;
     //
-    let comm_args = ["--image_dir", "/tmp/temp_image.png", "--det", "false"]; 
+    let comm_args = ["--image_dir", image_path, "--det", "false"];
+    if !debug.is_empty() {
+        println!("Executing command: paddleocr");
+        print!("Command args: ");
+        println!("{:?}", comm_args);
+    }
     // call PaddleOCR, send image via stdio and get results
-    let mut comm_exec = Command::new("paddleocr")
+    let comm_exec = Command::new("paddleocr")//  mut
         .args(comm_args)
         .stdin(Stdio::piped())
         .stderr(Stdio::piped())
         .stdout(Stdio::piped())
         .spawn()
         .map_err(|err| "PaddleOCR api call, Error: ".to_string() + &err.to_string())?;
-    let mut comm_stdin = comm_exec.stdin.take().unwrap();
-    comm_stdin.write_all(&vec8_image).unwrap();
-    drop(comm_stdin);
+    // let mut comm_stdin = comm_exec.stdin.take().unwrap();
+    // comm_stdin.write_all(&vec8_image).unwrap();
+    // drop(comm_stdin);
     let comm_output = comm_exec.wait_with_output().unwrap();
     let comm_output_stderr = String::from_utf8_lossy(&comm_output.stderr).to_string();
-    // if comm_output_stderr != "" {
-    //     let debug = DEBUG.lock().unwrap();
-    //     if !debug.is_empty() {
-    //         println!("PaddleOCR api call, Error: {}", &comm_output_stderr);
-    //     }
-    //     return Err("PaddleOCR api call, Error: ".to_string() + &comm_output_stderr);
-    // }
+    // parse PaddleOCR stderr output
+    let err_re = Regex::new(r"paddleocr\:\serror\:\s(?<w>.{0,})\s{0,}$").unwrap();
+    let err_found = err_re.captures_iter(&comm_output_stderr).map(|m| {
+        m.name("w").unwrap().as_str()
+    }).collect::<Vec<&str>>().join(" ");
+    if !err_found.is_empty() {
+        return Err("PaddleOCR api call, Error: ".to_string() + &err_found.to_string());
+    }
     let output = String::from_utf8_lossy(&comm_output.stdout).to_string();
-    println!("{}", output);
-    // let test_text = " [2025/03/02 15:58:28] ppocr INFO: **********/tmp/temp_image.png********** \n
-    //                         [2025/03/02 15:58:28] ppocr INFO: ('你你们', 0.9777671694755554)           \n
-    //                         [2025/03/02 15:58:28] ppocr INFO: **********/tmp/temp_image.png**********
-    //                         [2025/03/02 15:58:28] ppocr INFO: ('我们', 0.9777671694755554)";
-    // println!("{}", test_text);
-    // parse PaddleOCR output
-    let re = Regex::new(r"ppocr\sINFO:\s\(\'(?<w>.{0,})\'\,.{0,}\)").unwrap();
+    // parse PaddleOCR stdout output
+    let re = Regex::new(r"ppocr\s{0,}INFO:\s{0,}\(\'(?<w>.{0,})\'\,.{0,}\)").unwrap();
     let found = re.captures_iter(&output).map(|m| {
         m.name("w").unwrap().as_str()
     }).collect::<Vec<&str>>().join(" ");
-        // r"sendtextadb:(.{0,}$)").unwrap();
-    // let Some(caps) = re.captures(&test_text) else { 
-    //     return Ok("not Ok".to_string()); 
-    // };
-    println!("found something maybe: ");
-    println!("{}", found);
-    // println!("{:?}", caps);
-    // return Ok(output);
+    // return the result
     return Ok(found);
 }

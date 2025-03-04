@@ -45,8 +45,8 @@ static DARK_THEME: Mutex<String> = {
 
 #[tauri::command]
 fn recognize_text(base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
-    // let ocr_result = ocr::paddle_ocr_recognize_text(base_64_image, is_dark_theme);
-    let ocr_result = ocr::tesseract_ocr_recognize_text(base_64_image, is_dark_theme);
+    let ocr_result = ocr::paddle_ocr_recognize_text(base_64_image, is_dark_theme);
+    // let ocr_result = ocr::tesseract_ocr_recognize_text(base_64_image, is_dark_theme);
     let debug = DEBUG.lock().unwrap();
     if !debug.is_empty() && ocr_result.is_err() {
         println!("{}", ocr_result.clone().unwrap_err());
