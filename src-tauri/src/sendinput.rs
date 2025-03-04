@@ -44,25 +44,20 @@ pub fn write_text(text: String, in_focus: bool, use_clipboard: bool) -> Result<(
 
 pub fn alt_tab() -> Result<(), String> {
     let debug = DEBUG.lock().unwrap();
+    let comm_args = ["key", "--delay", "100", "alt+Tab"];
     if !debug.is_empty() {
         println!("Triggering alt+Tab keypress using xdotool.");
-    }
-    let comm_exec = Command::new("xdotool")
-        .args(["key", "--delay", "100", "alt+Tab"])
-        .output()
-        .map_err(|err| "Xdotool call, Error: ".to_string() + &err.to_string())
-        .unwrap();
-    if !debug.is_empty() {
         println!("Executing command: xdotool");
         print!("Command args: ");
-        println!("{:?}", ["key", "--delay", "100", "alt+Tab"]);
+        println!("{:?}", comm_args);
     }
+    let comm_exec = Command::new("xdotool")
+        .args(comm_args)
+        .output()
+        .map_err(|err| "Xdotool call, Error: ".to_string() + &err.to_string())?;
     let comm_output_stderr = String::from_utf8_lossy(&comm_exec.stderr).to_string();
     if comm_output_stderr != "" {
-        let debug = DEBUG.lock().unwrap();
-        if !debug.is_empty() {
-            println!("Xdotool call, Error: {}", &comm_output_stderr);
-        }
+        return Err("Xdotool call, Error: ".to_string() + &comm_output_stderr);
     }
     return Ok(());
 }
