@@ -5,6 +5,7 @@ use crate::DEBUG;
 use crate::SKIP_TASKBAR;
 
 pub fn write_text(text: String, in_focus: bool, use_clipboard: bool) -> Result<(), String> {
+    // return  Err("test error".to_string());
     let mut comm_args = [].to_vec();
     let skip_taskbar = SKIP_TASKBAR.lock().unwrap();
     if in_focus && skip_taskbar.is_empty() {
@@ -37,7 +38,8 @@ pub fn write_text(text: String, in_focus: bool, use_clipboard: bool) -> Result<(
     return Ok(());
 }
 
-pub fn alt_tab() {
+pub fn alt_tab() -> Result<(), String> {
+    // return Err("test error".to_string());
     let comm_exec = Command::new("xdotool")
         .args(["key", "--delay", "100", "alt+Tab"])
         .output()
@@ -50,4 +52,5 @@ pub fn alt_tab() {
             println!("Xdotool call, Error: {}", &comm_output_stderr);
         }
     }
+    return Ok(());
 }

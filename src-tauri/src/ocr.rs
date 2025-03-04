@@ -24,6 +24,7 @@ fn invert_colors(vec8_image: Vec<u8>) -> Vec<u8> {
 
 // recognize text using tesseract-ocr
 pub fn tesseract_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
+    // return  Err("test error".to_string());
     let mut vec8_image = decode(base_64_image).unwrap();
     if is_dark_theme {
         // invert color

@@ -45,18 +45,32 @@ static DARK_THEME: Mutex<String> = {
 
 #[tauri::command]
 fn recognize_text(base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
-    return ocr::paddle_ocr_recognize_text(base_64_image, is_dark_theme);
-    // return ocr::tesseract_ocr_recognize_text(base_64_image, is_dark_theme);
+    // let ocr_result = ocr::paddle_ocr_recognize_text(base_64_image, is_dark_theme);
+    let ocr_result = ocr::tesseract_ocr_recognize_text(base_64_image, is_dark_theme);
+    let debug = DEBUG.lock().unwrap();
+    if !debug.is_empty() && ocr_result.is_err() {
+        println!("{}", ocr_result.clone().unwrap_err());
+    }
+    return ocr_result;
 }
 
 #[tauri::command]
 fn write_text(text: String, in_focus: bool, use_clipboard: bool) -> Result<(), String> {
-    return sendinput::write_text(text, in_focus, use_clipboard);
+    let write_text_result = sendinput::write_text(text, in_focus, use_clipboard);
+    let debug = DEBUG.lock().unwrap();
+    if !debug.is_empty() && write_text_result.is_err() {
+        println!("{}", write_text_result.clone().unwrap_err());
+    }
+    return write_text_result;
 }
 
 #[tauri::command]
 fn alt_tab() {
-    sendinput::alt_tab();
+    let alt_tab_result = sendinput::alt_tab();
+    let debug = DEBUG.lock().unwrap();
+    if !debug.is_empty() && alt_tab_result.is_err() {
+        println!("{}", alt_tab_result.clone().unwrap_err());
+    }
 }
 
 // workaround
