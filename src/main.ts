@@ -35,7 +35,7 @@ function displayRecognizedText(text: any, err: any) {
 
 var offset = 20;
 var voffset = 100;
-var bottom_offset = 40;
+// var bottom_offset = 40;
 var use_clipboard = false;
 var is_dark_theme = false;
 
