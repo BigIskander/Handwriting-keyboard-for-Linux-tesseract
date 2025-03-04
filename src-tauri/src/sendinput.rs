@@ -13,6 +13,10 @@ pub fn write_text(text: String, in_focus: bool, use_clipboard: bool) -> Result<(
     if use_clipboard {
         if !in_focus {
             comm_args.append(&mut ["key", "--delay", "100"].to_vec());
+        } else {
+            if !skip_taskbar.is_empty() {
+                return Err("Can't paste the text.".to_string());
+            }
         }
         comm_args.append(&mut ["ctrl+v"].to_vec());
     } else {

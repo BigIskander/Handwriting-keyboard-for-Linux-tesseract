@@ -84,7 +84,7 @@ var can;
         if(args.args["fly-to-bottom"].value == true) {
             appWindow.setSize(new LogicalSize(monitor.size.width, 300));
             appWindow.setPosition(new LogicalPosition(
-                monitor.position.x, monitor.position.y + monitor.size.height - window.outerHeight - bottom_offset
+                monitor.position.x, monitor.position.y + monitor.size.height - window.outerHeight // - bottom_offset
             ));
         }
     }

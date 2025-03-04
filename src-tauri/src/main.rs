@@ -79,6 +79,7 @@ fn open_keyboard_window(app: tauri::AppHandle) {
     let gtk_window = window.gtk_window().unwrap();
     gtk_window.set_accept_focus(false);
     window.show().unwrap();
+    // window.set_focus().unwrap();
     app.get_webview_window("main").unwrap().close().unwrap();
 }
 
