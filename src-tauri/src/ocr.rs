@@ -124,7 +124,7 @@ pub fn paddle_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) -> 
     let comm_output = comm_exec.wait_with_output().unwrap();
     let comm_output_stderr = String::from_utf8_lossy(&comm_output.stderr).to_string();
     // parse PaddleOCR stderr output
-    let err_re = Regex::new(r"paddleocr\:\serror\:\s(?<w>.{0,})\s{0,}$").unwrap();
+    let err_re = Regex::new(r"paddleocr:\s{0,}error:\s{0,}(?<w>.{0,})\s{0,}$").unwrap();
     let err_found = err_re.captures_iter(&comm_output_stderr).map(|m| {
         m.name("w").unwrap().as_str()
     }).collect::<Vec<&str>>().join(" ");
