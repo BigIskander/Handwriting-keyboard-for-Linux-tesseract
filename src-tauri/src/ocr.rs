@@ -24,9 +24,15 @@ fn invert_colors(vec8_image: Vec<u8>) -> Vec<u8> {
 
 // recognize text using tesseract-ocr
 pub fn tesseract_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
-    // return  Err("test error".to_string());
+    let debug = DEBUG.lock().unwrap();
+    if !debug.is_empty() {
+        println!("Recognizing text using Tesseract OCR.");
+    }
     let mut vec8_image = decode(base_64_image).unwrap();
     if is_dark_theme {
+        if !debug.is_empty() {
+            println!("Inverting image colors.");
+        }
         // invert color
         vec8_image = invert_colors(vec8_image);   
     }
@@ -45,6 +51,11 @@ pub fn tesseract_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) 
         comm_args.insert(0, "--tessdata-dir");
         comm_args.insert(1, &cli_tessdata_dir);
     }
+    if !debug.is_empty() {
+        println!("Executing command: tesseract");
+        print!("Command args: ");
+        println!("{:?}", comm_args);
+    }
     // call tesseract, send image via stdio and get results
     let mut comm_exec = Command::new("tesseract")
         .args(comm_args)
@@ -54,6 +65,9 @@ pub fn tesseract_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) 
         .spawn()
         .map_err(|err| "Tesseract api call, Error: ".to_string() + &err.to_string())?;
     let mut comm_stdin = comm_exec.stdin.take().unwrap();
+    if !debug.is_empty() {
+        println!("Sending image to Tesseract OCR via stdin.");
+    }
     comm_stdin.write_all(&vec8_image).unwrap();
     drop(comm_stdin);
     let comm_output = comm_exec.wait_with_output().unwrap();
