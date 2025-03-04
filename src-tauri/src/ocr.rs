@@ -63,7 +63,7 @@ pub fn tesseract_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) 
         .stderr(Stdio::piped())
         .stdout(Stdio::piped())
         .spawn()
-        .map_err(|err| "Tesseract api call, Error: ".to_string() + &err.to_string())?;
+        .map_err(|err| "Tesseract OCR api call, Error: ".to_string() + &err.to_string())?;
     let mut comm_stdin = comm_exec.stdin.take().unwrap();
     if !debug.is_empty() {
         println!("Sending image to Tesseract OCR via stdin.");
@@ -73,11 +73,7 @@ pub fn tesseract_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) 
     let comm_output = comm_exec.wait_with_output().unwrap();
     let comm_output_stderr = String::from_utf8_lossy(&comm_output.stderr).to_string();
     if comm_output_stderr != "" {
-        let debug = DEBUG.lock().unwrap();
-        if !debug.is_empty() {
-            println!("Tesseract api call, Error: {}", &comm_output_stderr);
-        }
-        return Err("Tesseract api call, Error: ".to_string() + &comm_output_stderr);
+        return Err("Tesseract OCR api call, Error: ".to_string() + &comm_output_stderr);
     }
     let output = String::from_utf8_lossy(&comm_output.stdout).to_string();
     return Ok(output);

@@ -7,7 +7,7 @@ use crate::SKIP_TASKBAR;
 pub fn write_text(text: String, in_focus: bool, use_clipboard: bool) -> Result<(), String> {
     let debug = DEBUG.lock().unwrap();
     if !debug.is_empty() {
-        println!("Writing text using xdotools.");
+        println!("Writing text using xdotool.");
     }
     let mut comm_args = [].to_vec();
     let skip_taskbar = SKIP_TASKBAR.lock().unwrap();
@@ -45,7 +45,7 @@ pub fn write_text(text: String, in_focus: bool, use_clipboard: bool) -> Result<(
 pub fn alt_tab() -> Result<(), String> {
     let debug = DEBUG.lock().unwrap();
     if !debug.is_empty() {
-        println!("Triggering alt+Tab keypress using xdotools.");
+        println!("Triggering alt+Tab keypress using xdotool.");
     }
     let comm_exec = Command::new("xdotool")
         .args(["key", "--delay", "100", "alt+Tab"])
