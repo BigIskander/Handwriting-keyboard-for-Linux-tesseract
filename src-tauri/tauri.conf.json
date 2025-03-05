@@ -16,6 +16,9 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
+    "resources": [
+      "python/run_paddle_ocr.py"  
+    ],
     "longDescription": "Handwriting keyboard for Linux X11 desktop environment. \n\n To recognize handwritten pattern program uses tesseract-ocr. \n\n Github page: \n\n https://github.com/BigIskander/Handwriting-keyboard-for-Linux-tesseract",
     "category": "Education",
     "linux": {

@@ -5,6 +5,8 @@ use std::io::Cursor;
 use image::ImageReader;
 use image::imageops::colorops;
 use regex::Regex;
+use tauri::Manager;
+use tauri::path::BaseDirectory;
 
 // import global variables
 use crate::DEBUG;
@@ -79,7 +81,21 @@ pub fn tesseract_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) 
     return Ok(output);
 }
 
-pub fn paddle_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
+pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
+    let resource_path = app.path().resolve("python/run_paddle_ocr.py", BaseDirectory::Resource).map_err(|err| err.to_string())?;
+    let run_file = resource_path.to_str().unwrap();
+    let comm_exec = Command::new(run_file).args(["arg1", "arg2", "arg3", "..."])
+        .stdin(Stdio::piped())
+        .stderr(Stdio::piped())
+        .stdout(Stdio::piped())
+        .spawn()
+        .map_err(|err| "PaddleOCR api call, Error: ".to_string() + &err.to_string())?;
+    let comm_output = comm_exec.wait_with_output().unwrap();
+    let output = String::from_utf8_lossy(&comm_output.stdout).to_string();
+    println!("{}", output);
+    println!("{:?}", resource_path.to_str().unwrap());
+    return Err("testing".to_string());
+
     let debug = DEBUG.lock().unwrap();
     if !debug.is_empty() {
         println!("Recognizing text using Paddle OCR.");
