@@ -82,8 +82,6 @@ pub fn tesseract_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) 
 }
 
 pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
-    
-
     let debug = DEBUG.lock().unwrap();
     if !debug.is_empty() {
         println!("Recognizing text using Paddle OCR.");
@@ -96,6 +94,7 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
         // invert color
         vec8_image = invert_colors(vec8_image);
     }
+
     // let cursor_image = Cursor::new(vec8_image.clone());
     // let image = ImageReader::new(cursor_image).with_guessed_format().unwrap().decode().unwrap();
     // let image_path = "/tmp/temp_image.png";
@@ -104,7 +103,9 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
     // }
     // image.save(image_path).map_err(|err| "Can't save canvas as temporary file: ".to_string() + &err.to_string())?;
 
-    let resource_path = app.path().resolve("python/run_paddle_ocr.py", BaseDirectory::Resource).map_err(|err| err.to_string())?;
+    let resource_path = app.path()
+        .resolve("python/run_paddle_ocr.py", BaseDirectory::Resource)
+        .map_err(|err| err.to_string())?;
     let run_file = resource_path.to_str().unwrap();
     let mut comm_exec = Command::new("python3").args([run_file, "ch"])
         .stdin(Stdio::piped())
@@ -112,9 +113,6 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
         .stdout(Stdio::piped())
         .spawn()
         .map_err(|err| "PaddleOCR api call, Error: ".to_string() + &err.to_string())?;
-   
-    // println!("{:?}", resource_path.to_str().unwrap());
-    // return Err("testing".to_string());
 
     //
     // let comm_args = ["--image_dir", image_path, "--det", "false"];
@@ -131,17 +129,16 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
     //     .stdout(Stdio::piped())
     //     .spawn()
     //     .map_err(|err| "PaddleOCR api call, Error: ".to_string() + &err.to_string())?;
+    
     let mut comm_stdin = comm_exec.stdin.take().unwrap();
     comm_stdin.write_all(&vec8_image).unwrap();
     drop(comm_stdin);
-    // let comm_output = comm_exec.wait_with_output().unwrap();
     let comm_output = comm_exec.wait_with_output().unwrap();
     let comm_output_stderr = String::from_utf8_lossy(&comm_output.stderr).to_string();
-    println!("{}", comm_output_stderr);
+    // println!("{}", comm_output_stderr);
     let output = String::from_utf8_lossy(&comm_output.stdout).to_string();
-    println!("{}", output);
+    // println!("{}", output);
     // parse PaddleOCR stderr output 
-    // Error:
     let err_re = Regex::new(r"Error:(?<w>.{0,})").unwrap();
     // let err_re = Regex::new(r"paddleocr:\s{0,}error:\s{0,}(?<w>.{0,})\s{0,}$").unwrap();
     let err_found = err_re.captures_iter(&comm_output_stderr).map(|m| {
@@ -150,8 +147,6 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
     if !err_found.is_empty() {
         return Err("PaddleOCR api call, Error: ".to_string() + &err_found.to_string());
     }
-    // let output = String::from_utf8_lossy(&comm_output.stdout).to_string();
-    // println!("{}", output);
     // parse PaddleOCR stdout output
     let re = Regex::new(r"ppocr\s{0,}INFO:\s{0,}\(\'(?<w>.{0,})\'\,.{0,}\)").unwrap();
     let found = re.captures_iter(&output).map(|m| {
