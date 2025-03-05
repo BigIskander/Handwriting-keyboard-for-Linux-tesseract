@@ -106,7 +106,7 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
 
     let resource_path = app.path().resolve("python/run_paddle_ocr.py", BaseDirectory::Resource).map_err(|err| err.to_string())?;
     let run_file = resource_path.to_str().unwrap();
-    let mut comm_exec = Command::new("python").args([run_file, "arg1", "arg2", "arg3", "..."])
+    let mut comm_exec = Command::new("python3").args([run_file, "ch"])
         .stdin(Stdio::piped())
         .stderr(Stdio::piped())
         .stdout(Stdio::piped())
