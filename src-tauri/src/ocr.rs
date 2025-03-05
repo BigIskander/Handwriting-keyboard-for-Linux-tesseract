@@ -96,25 +96,23 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
         // invert color
         vec8_image = invert_colors(vec8_image);
     }
-    let cursor_image = Cursor::new(vec8_image.clone());
-    let image = ImageReader::new(cursor_image).with_guessed_format().unwrap().decode().unwrap();
-    let image_path = "/tmp/temp_image.png";
-    if !debug.is_empty() {
-        println!("Saving canvas as temporary image file: {}", image_path);
-    }
-    image.save(image_path).map_err(|err| "Can't save canvas as temporary file: ".to_string() + &err.to_string())?;
+    // let cursor_image = Cursor::new(vec8_image.clone());
+    // let image = ImageReader::new(cursor_image).with_guessed_format().unwrap().decode().unwrap();
+    // let image_path = "/tmp/temp_image.png";
+    // if !debug.is_empty() {
+    //     println!("Saving canvas as temporary image file: {}", image_path);
+    // }
+    // image.save(image_path).map_err(|err| "Can't save canvas as temporary file: ".to_string() + &err.to_string())?;
 
     let resource_path = app.path().resolve("python/run_paddle_ocr.py", BaseDirectory::Resource).map_err(|err| err.to_string())?;
     let run_file = resource_path.to_str().unwrap();
-    let comm_exec = Command::new("python").args([run_file, "arg1", "arg2", "arg3", "..."])
+    let mut comm_exec = Command::new("python").args([run_file, "arg1", "arg2", "arg3", "..."])
         .stdin(Stdio::piped())
         .stderr(Stdio::piped())
         .stdout(Stdio::piped())
         .spawn()
         .map_err(|err| "PaddleOCR api call, Error: ".to_string() + &err.to_string())?;
-    let comm_output = comm_exec.wait_with_output().unwrap();
-    let output = String::from_utf8_lossy(&comm_output.stdout).to_string();
-    // println!("{}", output);
+   
     // println!("{:?}", resource_path.to_str().unwrap());
     // return Err("testing".to_string());
 
@@ -133,12 +131,15 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
     //     .stdout(Stdio::piped())
     //     .spawn()
     //     .map_err(|err| "PaddleOCR api call, Error: ".to_string() + &err.to_string())?;
-    // let mut comm_stdin = comm_exec.stdin.take().unwrap();
-    // comm_stdin.write_all(&vec8_image).unwrap();
-    // drop(comm_stdin);
+    let mut comm_stdin = comm_exec.stdin.take().unwrap();
+    comm_stdin.write_all(&vec8_image).unwrap();
+    drop(comm_stdin);
     // let comm_output = comm_exec.wait_with_output().unwrap();
+    let comm_output = comm_exec.wait_with_output().unwrap();
     let comm_output_stderr = String::from_utf8_lossy(&comm_output.stderr).to_string();
-    // println!("{}", comm_output_stderr);
+    println!("{}", comm_output_stderr);
+    let output = String::from_utf8_lossy(&comm_output.stdout).to_string();
+    println!("{}", output);
     // parse PaddleOCR stderr output 
     // Error:
     let err_re = Regex::new(r"Error:(?<w>.{0,})").unwrap();
