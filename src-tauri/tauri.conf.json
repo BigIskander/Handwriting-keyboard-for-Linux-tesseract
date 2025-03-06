@@ -78,6 +78,10 @@
         {
           "name": "dark-theme",
           "takesValue": false
+        },
+        {
+          "name": "use-tmp-file",
+          "takesValue": false
         }
       ]
     }

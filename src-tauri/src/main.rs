@@ -43,6 +43,12 @@ static DARK_THEME: Mutex<String> = {
     Mutex::new(dark_theme)
 };
 
+// use tmp file? [value read from CLI]
+static USE_TMP_FILE: Mutex<String> = {
+    let use_tmp_file = String::new();
+    Mutex::new(use_tmp_file)
+};
+
 #[tauri::command]
 fn recognize_text(app: tauri::AppHandle, base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
     let ocr_result = ocr::paddle_ocr_recognize_text(app, base_64_image, is_dark_theme);
@@ -137,6 +143,10 @@ fn main() {
                     if skip_taskbar == true {
                         main_window.set_skip_taskbar(true).unwrap();
                         SKIP_TASKBAR.lock().unwrap().insert_str(0, "ok");
+                    }
+                    let use_tmp_file = &matches.args.get("use-tmp-file").expect("Error reading CLI.").value;
+                    if use_tmp_file == true {
+                        USE_TMP_FILE.lock().unwrap().insert_str(0, "ok");
                     }
                 }
                 Err(_) => {}
