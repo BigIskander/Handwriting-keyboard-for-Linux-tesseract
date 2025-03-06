@@ -83,6 +83,7 @@ pub fn tesseract_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) 
     return Ok(output);
 }
 
+// recognize text using using PaddleOCR
 pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
     let debug = DEBUG.lock().unwrap();
     if !debug.is_empty() {
