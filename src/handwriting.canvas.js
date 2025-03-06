@@ -70,6 +70,10 @@ SOFTWARE.
         this.setStrokeColor = function(color) {
             this.cxt.strokeStyle = color;
         }
+        this.setFillStyle = function(color) {
+            this.cxt.fillStyle = color;
+            this.cxt.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
     };
     /**
      * [toggle_Undo_Redo description]

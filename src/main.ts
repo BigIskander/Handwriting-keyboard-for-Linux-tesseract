@@ -58,7 +58,13 @@ var can;
     // setting up writing canvas
     // @ts-ignore
     can = new handwriting.Canvas(mycan, is_dark_theme);
-    if(is_dark_theme) can.setStrokeColor("white");
+    if(is_dark_theme) {
+        can.setFillStyle("black");
+        can.setStrokeColor("white");
+    } else {
+        can.setFillStyle("white");
+        can.setStrokeColor("black");
+    }
     //Set line width shown on the canvas element (default: 3)
     can.setLineWidth(5);
     window.onresize = () => { 
@@ -69,7 +75,17 @@ var can;
         // @ts-ignore
         can.width = window.outerWidth - offset;
         // @ts-ignore
-        if(is_dark_theme) can.setStrokeColor("white");
+        if(is_dark_theme) {
+            // @ts-ignore
+            can.setFillStyle("black");
+            // @ts-ignore
+            can.setStrokeColor("white");
+        } else {
+            // @ts-ignore
+            can.setFillStyle("white");
+            // @ts-ignore
+            can.setStrokeColor("black");
+        }
     };
     if (args.args.automode.value == true) {
         recognize_button.innerHTML = "";
