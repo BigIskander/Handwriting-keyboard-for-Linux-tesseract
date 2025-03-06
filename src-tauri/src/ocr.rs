@@ -97,6 +97,11 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
         vec8_image = invert_colors(vec8_image);
     }
     let use_tmp_file = USE_TMP_FILE.lock().unwrap();
+    let cli_lang = LANG.lock().unwrap();
+    let mut lang = "ch".to_string();
+    if !cli_lang.is_empty() {
+        lang = cli_lang.to_string();
+    }
     let mut comm_exec: Child;
     if !use_tmp_file.is_empty() {
         //save temp image file
@@ -108,7 +113,7 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
         }
         image.save(image_path).map_err(|err| "Can't save canvas as temporary file: ".to_string() + &err.to_string())?;
         // call PaddleOCR
-        let comm_args = ["--image_dir", image_path, "--use_angle_cls", "true", "--det", "false", "--lang", "ch"];
+        let comm_args = ["--image_dir", image_path, "--use_angle_cls", "true", "--det", "false", "--lang", &lang];
         if !debug.is_empty() {
             println!("Executing command: paddleocr");
             print!("Command args: ");
@@ -127,7 +132,7 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
             .resolve("python/run_paddle_ocr.py", BaseDirectory::Resource)
             .map_err(|err| err.to_string())?;
         let run_file = resource_path.to_str().unwrap();
-        let comm_args = [run_file, "ch"];
+        let comm_args = [run_file, &lang];
         if !debug.is_empty() {
             println!("Executing command: python3");
             print!("Command args: ");
