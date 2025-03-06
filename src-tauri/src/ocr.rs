@@ -3,6 +3,7 @@ use std::io::Write;
 use std::process::Child;
 use std::process::{Command, Stdio};
 use std::io::Cursor;
+use std::sync::MutexGuard;
 use image::ImageReader;
 use image::imageops::colorops;
 use regex::Regex;
@@ -25,6 +26,19 @@ fn invert_colors(vec8_image: Vec<u8>) -> Vec<u8> {
     image.write_to(&mut cursor_image2, image::ImageFormat::Png).unwrap();
     return cursor_image2.get_ref().to_vec();
 }
+
+// save image as temporary file
+fn save_temp_file(vec8_image: Vec<u8>, debug: &MutexGuard<String>) -> Result<String, String> {
+    //save temp image file
+    let cursor_image = Cursor::new(vec8_image.clone());
+    let image = ImageReader::new(cursor_image).with_guessed_format().unwrap().decode().unwrap();
+    let image_path = "/tmp/handwriting-keyboard-t_temp_image.png";
+    if !debug.is_empty() {
+        println!("Saving canvas as temporary image file: {}", image_path);
+    }
+    image.save(image_path).map_err(|err| "Can't save canvas as temporary file: ".to_string() + &err.to_string())?;
+    return Ok(image_path.to_string());
+}    
 
 // recognize text using tesseract-ocr
 pub fn tesseract_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
@@ -105,16 +119,9 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
     }
     let mut comm_exec: Child;
     if !use_tmp_file.is_empty() {
-        //save temp image file
-        let cursor_image = Cursor::new(vec8_image.clone());
-        let image = ImageReader::new(cursor_image).with_guessed_format().unwrap().decode().unwrap();
-        let image_path = "/tmp/handwriting-keyboard-t_temp_image.png";
-        if !debug.is_empty() {
-            println!("Saving canvas as temporary image file: {}", image_path);
-        }
-        image.save(image_path).map_err(|err| "Can't save canvas as temporary file: ".to_string() + &err.to_string())?;
+        let image_path = save_temp_file(vec8_image, &debug).map_err(|err| err)?;
         // call PaddleOCR
-        let comm_args = ["--image_dir", image_path, "--use_angle_cls", "true", "--det", "false", "--lang", &lang];
+        let comm_args = ["--image_dir", &image_path, "--use_angle_cls", "true", "--det", "false", "--lang", &lang];
         if !debug.is_empty() {
             println!("Executing command: paddleocr");
             print!("Command args: ");
