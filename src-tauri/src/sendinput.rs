@@ -4,6 +4,7 @@ use tauri::Manager;
 // import global variables
 use crate::DEBUG;
 use crate::SKIP_TASKBAR;
+use crate::USE_SHIFT_CTRL_V;
 
 pub fn xdotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bool) -> Result<(), String> {
     let debug = DEBUG.lock().unwrap();
@@ -11,6 +12,7 @@ pub fn xdotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bo
         println!("Writing text using xdotool.");
     }
     let in_focus = app.get_webview_window("local").unwrap().is_focused().unwrap();
+    let use_shift_ctrl_v = USE_SHIFT_CTRL_V.lock().unwrap();
     let mut comm_args = [].to_vec();
     let skip_taskbar = SKIP_TASKBAR.lock().unwrap();
     if in_focus && skip_taskbar.is_empty() {
@@ -24,7 +26,11 @@ pub fn xdotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bo
                 return Err("Can't paste the text.".to_string());
             }
         }
-        comm_args.append(&mut ["ctrl+v"].to_vec());
+        if !use_shift_ctrl_v.is_empty() {
+            comm_args.append(&mut ["shift+ctrl+v"].to_vec());
+        } else {
+            comm_args.append(&mut ["ctrl+v"].to_vec());
+        }
     } else {
         comm_args.append(&mut ["type", "--delay", "300", &text].to_vec());
     }
@@ -70,6 +76,7 @@ pub fn ydotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bo
         println!("Writing text using ydotool.");
     }
     let in_focus = app.get_webview_window("local").unwrap().is_focused().unwrap();
+    let use_shift_ctrl_v = USE_SHIFT_CTRL_V.lock().unwrap();
     let mut comm_args = [].to_vec();
     let skip_taskbar = SKIP_TASKBAR.lock().unwrap();
     if in_focus && skip_taskbar.is_empty() {
@@ -79,7 +86,11 @@ pub fn ydotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bo
         if in_focus && !skip_taskbar.is_empty() {
             return Err("Can't paste the text.".to_string());
         }
-        comm_args.append(&mut ["key", "29:1", "47:1", "29:0", "47:0"].to_vec());
+        if !use_shift_ctrl_v.is_empty() {
+            comm_args.append(&mut ["key", "42:1", "29:1", "47:1", "42:0", "29:0", "47:0"].to_vec());
+        } else {
+            comm_args.append(&mut ["key", "29:1", "47:1", "29:0", "47:0"].to_vec());
+        }
     } else {
         comm_args.append(&mut ["type", &text].to_vec());
     }
@@ -96,6 +107,12 @@ pub fn ydotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bo
     let comm_output_stderr = String::from_utf8_lossy(&comm_exec.stderr).to_string();
     if comm_output_stderr != "" {
         return Err("Ydotool call, Error: ".to_string() + &comm_output_stderr);
+    } else {
+        // ydotool outputs error in stdout instead of stderr in newer version
+        let output =String::from_utf8_lossy(&comm_exec.stdout).to_string();
+        if  output != "" {
+            return Err("Ydotool call, Error: ".to_string() + &output);
+        }
     }
     return Ok(());
 }

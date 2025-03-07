@@ -90,6 +90,10 @@
         {
           "name": "use-ydotool",
           "takesValue": false
+        },
+        {
+          "name": "use-shift",
+          "takesValue": false
         }
       ]
     }

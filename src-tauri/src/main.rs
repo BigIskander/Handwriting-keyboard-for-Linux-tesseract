@@ -61,6 +61,12 @@ static USE_YDOTOOL: Mutex<String> = {
     Mutex::new(use_ydotool)
 };
 
+// use shift+ctrl+v to paste the text [value read from CLI]
+static USE_SHIFT_CTRL_V: Mutex<String> = {
+    let use_shift_ctrl_v = String::new();
+    Mutex::new(use_shift_ctrl_v)
+};
+
 #[tauri::command]
 fn recognize_text(app: tauri::AppHandle, base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
     let use_paddle_ocr = USE_PADDLE_OCR.lock().unwrap();
@@ -184,6 +190,10 @@ fn main() {
                     let use_ydotool = &matches.args.get("use-ydotool").expect("Error reading CLI.").value;
                     if use_ydotool == true {
                         USE_YDOTOOL.lock().unwrap().insert_str(0, "ok");
+                    }
+                    let use_shift_ctrl_v = &matches.args.get("use-shift").expect("Error reading CLI.").value;
+                    if use_shift_ctrl_v == true {
+                        USE_SHIFT_CTRL_V.lock().unwrap().insert_str(0, "ok");
                     }
                 }
                 Err(_) => {}
