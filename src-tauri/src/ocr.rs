@@ -10,6 +10,10 @@ use regex::Regex;
 use tauri::Manager;
 use tauri::path::BaseDirectory;
 
+// to calculate execution time
+use std::time::SystemTime;
+use std::time::UNIX_EPOCH;
+
 // import global variables
 use crate::DEBUG;
 // tesseract-ocr specific variables
@@ -42,6 +46,7 @@ fn save_temp_file(vec8_image: Vec<u8>, debug: &MutexGuard<String>) -> Result<Str
 
 // recognize text using tesseract-ocr
 pub fn tesseract_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
+    let start = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
     let debug = DEBUG.lock().unwrap();
     if !debug.is_empty() {
         println!("Recognizing text using Tesseract OCR.");
@@ -117,11 +122,17 @@ pub fn tesseract_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) 
     }
     let output = String::from_utf8_lossy(&comm_output.stdout).to_string();
     // return the result
+    if !debug.is_empty() {
+        let end = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+        print!("Execution time: ");
+        println!("{:?}", end - start);
+    }
     return Ok(output);
 }
 
 // recognize text using using PaddleOCR
 pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
+    let start = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
     let debug = DEBUG.lock().unwrap();
     if !debug.is_empty() {
         println!("Recognizing text using PaddleOCR.");
@@ -216,5 +227,10 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
         m.name("w").unwrap().as_str()
     }).collect::<Vec<&str>>().join(" ");
     // return the result
+    if !debug.is_empty() {
+        let end = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+        print!("Execution time: ");
+        println!("{:?}", end - start);
+    }
     return Ok(found);
 }
