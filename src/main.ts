@@ -124,10 +124,9 @@ function erase() {
 }
 
 async function choseWord(word: String) {
-    var in_focus = await appWindow.isFocused();
     if(use_clipboard == true) await writeText(String(word));
     await invoke('write_text', { 
-        text: word, inFocus: in_focus, useClipboard: use_clipboard 
+        text: word, useClipboard: use_clipboard 
     }).then(() => { erase(); }).catch((err) => { displayRecognizedText("", err); });
 }
 

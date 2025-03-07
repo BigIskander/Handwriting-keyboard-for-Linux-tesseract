@@ -55,6 +55,12 @@ static USE_PADDLE_OCR: Mutex<String> = {
     Mutex::new(use_paddle_ocr)
 };
 
+// use ydotool? [value read from CLI]
+static USE_YDOTOOL: Mutex<String> = {
+    let use_ydotool = String::new();
+    Mutex::new(use_ydotool)
+};
+
 #[tauri::command]
 fn recognize_text(app: tauri::AppHandle, base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
     let use_paddle_ocr = USE_PADDLE_OCR.lock().unwrap();
@@ -72,8 +78,14 @@ fn recognize_text(app: tauri::AppHandle, base_64_image: String, is_dark_theme: b
 }
 
 #[tauri::command]
-fn write_text(text: String, in_focus: bool, use_clipboard: bool) -> Result<(), String> {
-    let write_text_result = sendinput::write_text(text, in_focus, use_clipboard);
+fn write_text(app: tauri::AppHandle, text: String, use_clipboard: bool) -> Result<(), String> {
+    let use_ydotool = USE_YDOTOOL.lock().unwrap();
+    let write_text_result: Result<(), String>;
+    if !use_ydotool.is_empty() {
+        write_text_result = sendinput::ydotool_write_text(app, text, use_clipboard);
+    } else {
+        write_text_result = sendinput::xdotool_write_text(app, text, use_clipboard);
+    }
     let debug = DEBUG.lock().unwrap();
     if !debug.is_empty() && write_text_result.is_err() {
         println!("{}", write_text_result.clone().unwrap_err());
@@ -83,7 +95,13 @@ fn write_text(text: String, in_focus: bool, use_clipboard: bool) -> Result<(), S
 
 #[tauri::command]
 fn alt_tab() {
-    let alt_tab_result = sendinput::alt_tab();
+    let use_ydotool = USE_YDOTOOL.lock().unwrap();
+    let alt_tab_result: Result<(), String>;
+    if !use_ydotool.is_empty() {
+        alt_tab_result = sendinput::ydotool_alt_tab();
+    } else {
+        alt_tab_result = sendinput::xdotool_alt_tab();
+    }
     let debug = DEBUG.lock().unwrap();
     if !debug.is_empty() && alt_tab_result.is_err() {
         println!("{}", alt_tab_result.clone().unwrap_err());
@@ -162,6 +180,10 @@ fn main() {
                     let use_paddle_ocr = &matches.args.get("use-paddle-ocr").expect("Error reading CLI.").value;
                     if use_paddle_ocr == true {
                         USE_PADDLE_OCR.lock().unwrap().insert_str(0, "ok");
+                    }
+                    let use_ydotool = &matches.args.get("use-ydotool").expect("Error reading CLI.").value;
+                    if use_ydotool == true {
+                        USE_YDOTOOL.lock().unwrap().insert_str(0, "ok");
                     }
                 }
                 Err(_) => {}

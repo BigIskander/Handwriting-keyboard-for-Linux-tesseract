@@ -86,6 +86,10 @@
         {
           "name": "use-paddle-ocr",
           "takesValue": false
+        },
+        {
+          "name": "use-ydotool",
+          "takesValue": false
         }
       ]
     }
