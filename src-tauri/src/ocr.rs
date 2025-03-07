@@ -55,39 +55,61 @@ pub fn tesseract_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) 
         vec8_image = invert_colors(vec8_image);   
     }
     // working with CLI parameters
+    let use_tmp_file = USE_TMP_FILE.lock().unwrap();
+    let cli_tessdata_dir = TESSDATA_DIR.lock().unwrap();
     let cli_lang = LANG.lock().unwrap();
     let mut lang = "chi_all".to_string();
     if !cli_lang.is_empty() {
         lang = cli_lang.to_string();
     }
-    let mut comm_args = [
-        "-l", &lang, "--dpi", "96", "--psm", "7", "--oem", "3", "-", "stdout",
-    ]
-    .to_vec();
-    let cli_tessdata_dir = TESSDATA_DIR.lock().unwrap();
-    if !cli_tessdata_dir.is_empty() {
-        comm_args.insert(0, "--tessdata-dir");
-        comm_args.insert(1, &cli_tessdata_dir);
-    }
-    if !debug.is_empty() {
-        println!("Executing command: tesseract");
-        print!("Command args: ");
-        println!("{:?}", comm_args);
-    }
     // call tesseract, send image via stdio and get results
-    let mut comm_exec = Command::new("tesseract")
-        .args(comm_args)
-        .stdin(Stdio::piped())
-        .stderr(Stdio::piped())
-        .stdout(Stdio::piped())
-        .spawn()
-        .map_err(|err| "Tesseract OCR api call, Error: ".to_string() + &err.to_string())?;
-    let mut comm_stdin = comm_exec.stdin.take().unwrap();
-    if !debug.is_empty() {
-        println!("Sending image to Tesseract OCR via stdin.");
+    let mut comm_args: Vec<&str> = [].to_vec();
+    let image_path: String;
+    let mut comm_exec: Child;
+    if !use_tmp_file.is_empty() {
+        image_path = save_temp_file(vec8_image, &debug).map_err(|err| err)?;
+        comm_args.append(&mut [&image_path, "-"].to_vec());
+        if !cli_tessdata_dir.is_empty() {
+            comm_args.append(&mut ["--tessdata-dir", &cli_tessdata_dir].to_vec());
+        }
+        comm_args.append(&mut ["-l", &lang, "--dpi", "96", "--psm", "7", "--oem", "3"].to_vec());
+        if !debug.is_empty() {
+            println!("Executing command: tesseract");
+            print!("Command args: ");
+            println!("{:?}", comm_args);
+        }
+        comm_exec = Command::new("tesseract")
+            .args(comm_args)
+            .stdin(Stdio::piped())
+            .stderr(Stdio::piped())
+            .stdout(Stdio::piped())
+            .spawn()
+            .map_err(|err| "Tesseract OCR api call, Error: ".to_string() + &err.to_string())?;
+    } else {
+        if !cli_tessdata_dir.is_empty() {
+            comm_args.append(&mut ["--tessdata-dir", &cli_tessdata_dir].to_vec());
+        }
+        comm_args.append(&mut ["-l", &lang, "--dpi", "96", "--psm", "7", "--oem", "3", "-", "stdout"].to_vec());
+        if !debug.is_empty() {
+            println!("Executing command: tesseract");
+            print!("Command args: ");
+            println!("{:?}", comm_args);
+        }
+        comm_exec = Command::new("tesseract")
+            .args(comm_args)
+            .stdin(Stdio::piped())
+            .stderr(Stdio::piped())
+            .stdout(Stdio::piped())
+            .spawn()
+            .map_err(|err| "Tesseract OCR api call, Error: ".to_string() + &err.to_string())?;
+        let mut comm_stdin = comm_exec.stdin.take().unwrap();
+        if !debug.is_empty() {
+            println!("Sending image to Tesseract OCR via stdin.");
+        }
+        comm_stdin.write_all(&vec8_image).unwrap();
+        drop(comm_stdin);
     }
-    comm_stdin.write_all(&vec8_image).unwrap();
-    drop(comm_stdin);
+    // geting the results
     let comm_output = comm_exec.wait_with_output().unwrap();
     let comm_output_stderr = String::from_utf8_lossy(&comm_output.stderr).to_string();
     if comm_output_stderr != "" {
