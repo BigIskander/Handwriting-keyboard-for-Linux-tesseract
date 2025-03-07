@@ -82,6 +82,10 @@
         {
           "name": "use-tmp-file",
           "takesValue": false
+        },
+        {
+          "name": "use-paddle-ocr",
+          "takesValue": false
         }
       ]
     }

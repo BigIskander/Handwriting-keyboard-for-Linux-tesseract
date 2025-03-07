@@ -49,10 +49,21 @@ static USE_TMP_FILE: Mutex<String> = {
     Mutex::new(use_tmp_file)
 };
 
+// use PaddleOCR [value read from CLI]
+static USE_PADDLE_OCR: Mutex<String> = {
+    let use_paddle_ocr = String::new();
+    Mutex::new(use_paddle_ocr)
+};
+
 #[tauri::command]
 fn recognize_text(app: tauri::AppHandle, base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
-    // let ocr_result = ocr::paddle_ocr_recognize_text(app, base_64_image, is_dark_theme);
-    let ocr_result = ocr::tesseract_ocr_recognize_text(base_64_image, is_dark_theme);
+    let use_paddle_ocr = USE_PADDLE_OCR.lock().unwrap();
+    let ocr_result: Result<String, String>;
+    if !use_paddle_ocr.is_empty() {
+        ocr_result = ocr::paddle_ocr_recognize_text(app, base_64_image, is_dark_theme);
+    } else {
+        ocr_result = ocr::tesseract_ocr_recognize_text(base_64_image, is_dark_theme);
+    }
     let debug = DEBUG.lock().unwrap();
     if !debug.is_empty() && ocr_result.is_err() {
         println!("{}", ocr_result.clone().unwrap_err());
@@ -147,6 +158,10 @@ fn main() {
                     let use_tmp_file = &matches.args.get("use-tmp-file").expect("Error reading CLI.").value;
                     if use_tmp_file == true {
                         USE_TMP_FILE.lock().unwrap().insert_str(0, "ok");
+                    }
+                    let use_paddle_ocr = &matches.args.get("use-paddle-ocr").expect("Error reading CLI.").value;
+                    if use_paddle_ocr == true {
+                        USE_PADDLE_OCR.lock().unwrap().insert_str(0, "ok");
                     }
                 }
                 Err(_) => {}
