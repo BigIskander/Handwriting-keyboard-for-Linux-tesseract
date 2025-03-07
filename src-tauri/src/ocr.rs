@@ -116,6 +116,7 @@ pub fn tesseract_ocr_recognize_text(base_64_image: String, is_dark_theme: bool) 
         return Err("Tesseract OCR api call, Error: ".to_string() + &comm_output_stderr);
     }
     let output = String::from_utf8_lossy(&comm_output.stdout).to_string();
+    // return the result
     return Ok(output);
 }
 
