@@ -216,8 +216,10 @@ fn main() {
                     }
                 }
                 Err(err) => { 
-                    println!("Error reading CLI."); 
-                    panic!("{}", err.to_string()); 
+                    println!("Error reading CLI.");
+                    println!("{}", err.to_string());
+                    app.app_handle().exit(1);
+                    return Ok(()); 
                 }
             }
             Ok(())
