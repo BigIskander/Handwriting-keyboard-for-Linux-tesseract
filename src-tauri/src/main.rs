@@ -159,6 +159,7 @@ fn main() {
             let main_window = app.get_webview_window("main").unwrap();
             match app.cli().matches() {
                 Ok(matches) => {
+                    // example taken from: https://qiita.com/takavfx/items/4743ceaf9fccc87eac52 
                     // print --help or CLI options
                     if let Some(x) = matches.args.get("help").clone() {
                         println!("{}", x.value.as_str().unwrap());
@@ -167,7 +168,10 @@ fn main() {
                     }
                     // print --version
                     if let Some(_) = matches.args.get("version").clone() {
-                        println!("Version: 2.0.0");
+                        println!("{}, Version: {}",
+                            app.config().product_name.clone().expect("Failed to get product name."),
+                            app.config().version.clone().expect("Failed to get version number.")
+                        );
                         app.app_handle().exit(0);
                         return Ok(());
                     }
