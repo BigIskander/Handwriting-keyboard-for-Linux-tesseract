@@ -43,7 +43,7 @@
           "name": "lang",
           "short": "l",
           "takesValue": true,
-          "description": "Language used to recognize handwriting pattern. Depends on OCR engine."
+          "description": "Language used to recognize handwriting pattern. Value depends on OCR engine. \nDefault value is 'chi_all' for Tesseract OCR and 'ch' for PaddleOCR."
         },
         {
           "name": "tessdata-dir",
@@ -69,12 +69,12 @@
         {
           "name": "use-clipboard",
           "takesValue": false,
-          "description": "Copy text to clipboard and paste it via triggering ctrl+V (or shift+ctrl+V) \nkyepress to past text. \nBy default program will try to type text (ydotool only supports typing latin characters)."
+          "description": "Copy text to clipboard and paste it via triggering ctrl+V (or shift+ctrl+V) \nkyepress to paste the text. \nBy default program will try to type text (ydotool only supports typing latin characters)."
         },
         {
           "name": "use-shift",
           "takesValue": false,
-          "description": "Trigger shift+ctrl+V kyepress to paste text from clipboard. By default program uses ctrl+V."
+          "description": "Trigger shift+ctrl+V kyepress to paste text from clipboard. By default program uses ctrl+V. \nOnly applyed when '--use-clipboard' option is set."
         },
          {
           "name": "return-focus",
