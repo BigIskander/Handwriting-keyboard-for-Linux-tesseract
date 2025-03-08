@@ -148,15 +148,30 @@ fn main() {
         .plugin(tauri_plugin_cli::init())
         .setup(|app| {
             println!("-------------------------------------------------------------------------------\n\
-                        Handwriting keyboard for Linux X11 desktop environment. \n\
-                        To recognize handwritten pattern program uses tesseract-ocr. \n\
+                        Handwriting keyboard for Linux desktop environment. \n\
+                        To recognize handwritten pattern program uses OCR engine. \n\
                         Github page: \n\
                         https://github.com/BigIskander/Handwriting-keyboard-for-Linux-tesseract \n\
-                        App version: 1.2.0 \n\
+                        App version: 2.0.0 \n\
+                        \n\
+                        launch app with '--help' command line option to Print help \n\
                       -------------------------------------------------------------------------------");
             let main_window = app.get_webview_window("main").unwrap();
             match app.cli().matches() {
                 Ok(matches) => {
+                    // print --help or CLI options
+                    if let Some(x) = matches.args.get("help").clone() {
+                        println!("{}", x.value.as_str().unwrap());
+                        app.app_handle().exit(0);
+                        return Ok(());
+                    }
+                    // print --version
+                    if let Some(_) = matches.args.get("version").clone() {
+                        println!("Version: 2.0.0");
+                        app.app_handle().exit(0);
+                        return Ok(());
+                    }
+                    // parse other CLI options
                     let cli_tessdata_dir = &matches.args.get("tessdata-dir").expect("Error reading CLI.").value;
                     if cli_tessdata_dir.is_string() {
                         TESSDATA_DIR.lock().unwrap().insert_str(0, cli_tessdata_dir.as_str().expect("Error reading CLI."));
@@ -196,7 +211,10 @@ fn main() {
                         USE_SHIFT_CTRL_V.lock().unwrap().insert_str(0, "ok");
                     }
                 }
-                Err(_) => {}
+                Err(err) => { 
+                    println!("Error reading CLI."); 
+                    panic!("{}", err.to_string()); 
+                }
             }
             Ok(())
         })
