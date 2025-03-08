@@ -19,16 +19,9 @@
     "resources": [
       "python/run_paddle_ocr.py"  
     ],
-    "longDescription": "Handwriting keyboard for Linux X11 desktop environment. \n\n To recognize handwritten pattern program uses tesseract-ocr. \n\n Github page: \n\n https://github.com/BigIskander/Handwriting-keyboard-for-Linux-tesseract",
+    "longDescription": "Handwriting keyboard for Linux desktop environment. \n\n To recognize handwritten pattern program uses OCR engine. \n\n Github page: \n\n https://github.com/BigIskander/Handwriting-keyboard-for-Linux-tesseract",
     "category": "Education",
-    "linux": {
-      "deb": {
-        "depends": [
-          "xdotool",
-          "tesseract-ocr"
-        ]
-      }
-    }
+    "linux": {}
   },
   "productName": "handwriting-keyboard-t",
   "mainBinaryName": "handwriting-keyboard-t",
@@ -42,58 +35,71 @@
       "afterHelp": "",
       "args": [
         {
-          "name": "tessdata-dir",
-          "takesValue": true
+          "name": "use-paddle-ocr",
+          "takesValue": false,
+          "description": "Use PaddleOCR to recognize handwriting pattern. By default program uses Tesseract OCR."
         },
         {
           "name": "lang",
           "short": "l",
-          "takesValue": true
+          "takesValue": true,
+          "description": "Language used to recognize handwriting pattern. Depends on OCR engine."
+        },
+        {
+          "name": "tessdata-dir",
+          "takesValue": true,
+          "description": "A directory with *.traineddata files for Tesseract OCR engine. Tesseract OCR specefic."
         },
         {
           "name": "automode",
           "short": "a",
-          "takesValue": false
-        },
-        {
-          "name": "skip-taskbar",
-          "takesValue": false
-        },
-        {
-          "name": "fly-to-bottom",
-          "takesValue": false
-        },
-        {
-          "name": "return-focus",
-          "takesValue": false
-        },
-        {
-          "name": "debug",
-          "takesValue": false
-        },
-        {
-          "name": "use-clipboard",
-          "takesValue": false
-        },
-        {
-          "name": "dark-theme",
-          "takesValue": false
+          "takesValue": false,
+          "description": "Automatically send recognize text request to OCR engine after every stroke."
         },
         {
           "name": "use-tmp-file",
-          "takesValue": false
-        },
-        {
-          "name": "use-paddle-ocr",
-          "takesValue": false
+          "takesValue": false,
+          "description": "Save canvas as temporary image file and send path of this file to OCR engine. \nBy default program sends image data to OCR engine via stdin."
         },
         {
           "name": "use-ydotool",
-          "takesValue": false
+          "takesValue": false,
+          "description": "Use ydotool to send keyboard input. By default program uses xdotool."
+        },
+        {
+          "name": "use-clipboard",
+          "takesValue": false,
+          "description": "Copy text to clipboard and paste it via triggering ctrl+V (or shift+ctrl+V) \nkyepress to past text. \nBy default program will try to type text (ydotool only supports typing latin characters)."
         },
         {
           "name": "use-shift",
-          "takesValue": false
+          "takesValue": false,
+          "description": "Trigger shift+ctrl+V kyepress to paste text from clipboard. By default program uses ctrl+V."
+        },
+         {
+          "name": "return-focus",
+          "takesValue": false,
+          "description": "Program will return focus to previous window by triggering alt+Tab kyepress \nevery time when program gains focus (after mouseup event inside the window). \nWill not work if option '--skip-taskbar' is set."
+        },
+        {
+          "name": "fly-to-bottom",
+          "takesValue": false,
+          "description": "At launch program window will fly to the bottom of the screen and resize to screen width."
+        },
+        {
+          "name": "skip-taskbar",
+          "takesValue": false,
+          "description": "Program window will skip taskbar."
+        },
+        {
+          "name": "dark-theme",
+          "takesValue": false,
+          "description": "Use dark theme. Change colors of the application to dark theme."
+        },
+        {
+          "name": "debug",
+          "takesValue": false,
+          "description": "Output some debug info in console."
         }
       ]
     }
