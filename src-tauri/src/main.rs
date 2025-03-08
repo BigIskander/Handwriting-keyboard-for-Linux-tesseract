@@ -162,6 +162,29 @@ fn main() {
                     // example taken from: https://qiita.com/takavfx/items/4743ceaf9fccc87eac52 
                     // print --help or CLI options
                     if let Some(x) = matches.args.get("help").clone() {
+                        println!("  \n\
+                                    Handwriting keyboard for Linux desktop environment. \n\
+                                    How to use the program: \n\
+                                    \n\
+                                    1) write text in the canvas by using mouse or stylus (on graphical tablet) \n\
+                                    2) press recognize button \n\
+                                    3) press to recognized text, programm will type this text \n\
+                                    \t or copy to clipboard and paste by triggering ctrl+V (or shift+ctrl+V) keypress
+                                    \n\
+                                    To recognize handwritten pattern program uses OCR engine. \n\
+                                    At the moment programm supports 2 OCR engines, which is: \n\
+                                    Tesseract OCR and PaddleOCR. \n\
+                                    \n\
+                                    To send the keyboard input programm uses xdotool or ydotool.\n\
+                                    xdotool - only supports X11 desktop environment \n\
+                                    ydotool - works in X11 and Wayland desktop environment \n\
+                                    \t ydotool can type only latin characters \n\
+                                    \t and ydotoold process should be running in order to ydotool to work \n\
+                                    \n\
+                                    If programs window is in focus, program will trigger alt+Tab keypress \n\
+                                    \t to return focus to previous active window and then send the input \n\
+                                    \t (this does not applied when '--skip-taskbar' option is set) \n\
+                                ");
                         println!("{}", x.value.as_str().unwrap());
                         app.app_handle().exit(0);
                         return Ok(());
