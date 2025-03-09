@@ -167,9 +167,10 @@ fn main() {
                                     How to use the program: \n\
                                     \n\
                                     1) write text in the canvas by using mouse or stylus (on graphical tablet) \n\
-                                    2) press recognize button \n\
+                                    2) press 'recognize' button \n\
                                     3) press to recognized text, programm will type this text \n\
-                                    \t or copy to clipboard and paste by triggering ctrl+V (or shift+ctrl+V) keypress \n\
+                                    \t or copy it to clipboard and paste by \n\
+                                    \t triggering ctrl+V (or shift+ctrl+V) keypress \n\
                                     \n\
                                     To recognize handwritten pattern program uses OCR engine. \n\
                                     At the moment programm supports 2 OCR engines, which is: \n\

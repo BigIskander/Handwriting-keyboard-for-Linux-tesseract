@@ -21,6 +21,8 @@ This is the instruction for version 2, instruction for version 1 is located at v
 
 Note: before using the programm you need to install [dependencies](#installing-dependencies).
 
+If programs window is in focus, before sending keyboard input program will trigger alt+Tab keypress to return focus to previous active window and only then send the input (this does not applied when '--skip-taskbar' option is set).
+
 ## Command line options 
 
 ```
