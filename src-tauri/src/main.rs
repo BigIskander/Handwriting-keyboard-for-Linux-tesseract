@@ -67,7 +67,7 @@ static USE_SHIFT_CTRL_V: Mutex<String> = {
     Mutex::new(use_shift_ctrl_v)
 };
 
-#[tauri::command]
+#[tauri::command(async)]
 fn recognize_text(app: tauri::AppHandle, base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
     let use_paddle_ocr = USE_PADDLE_OCR.lock().unwrap();
     let ocr_result: Result<String, String>;
