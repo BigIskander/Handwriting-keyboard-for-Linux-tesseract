@@ -9,35 +9,44 @@ const appWindow = getCurrentWebviewWindow();
 var out: HTMLElement = document.getElementById('results');
 // @ts-ignore
 var recognize_button: HTMLElement = document.getElementById('recognize_button');
+var recognize_button_link: HTMLElement = recognize_button.getElementsByTagName('a')[0];
+var isRecognizing = false;
 
 function recognizing_style(is_recognizing: Boolean = true) {
     if(is_recognizing) {
         document.body.style.cursor = "wait";
         // @ts-ignore
         mycan.style.cursor = "wait";
+        recognize_button.style.fontWeight = "normal";
+        recognize_button_link.innerText = "Recognizing...";
     } else {
         document.body.style.cursor = "default";
         // @ts-ignore
         mycan.style.cursor = "crosshair";
+        recognize_button_link.innerText = "Recognize.";
     }
 }
 
 async function recognizeText() {
-    // @ts-ignore
-    var image_data = await mycan.toDataURL().split('base64,')[1];
-    recognizing_style(true);
-    // @ts-ignore
-    await invoke('recognize_text', { 
-        base64Image: image_data, isDarkTheme: is_dark_theme 
-    }).then((response) => { 
+    if(!isRecognizing) {
+        console.log("Recognizing...");
+        isRecognizing = true;
         // @ts-ignore
-        displayRecognizedText(response.replace(/(?:\r\n|\r|\n|\t)/g, ' ').replace(/(?:\s\s+)/g, ' ').trim(), null); 
-        recognizing_style(false);
-    }).catch((err) => { 
-        displayRecognizedText("", err);
-        recognizing_style(false);
-    });
-    recognize_button.style.fontWeight = "normal";
+        var image_data = await mycan.toDataURL().split('base64,')[1];
+        recognizing_style(true);
+        // @ts-ignore
+        await invoke('recognize_text', { 
+            base64Image: image_data, isDarkTheme: is_dark_theme 
+        }).then((response) => { 
+            // @ts-ignore
+            displayRecognizedText(response.replace(/(?:\r\n|\r|\n|\t)/g, ' ').replace(/(?:\s\s+)/g, ' ').trim(), null); 
+            recognizing_style(false);
+        }).catch((err) => { 
+            displayRecognizedText("", err);
+            recognizing_style(false);
+        });
+        isRecognizing = false;
+    }
 }
 
 function displayRecognizedText(text: any, err: any) {
@@ -45,7 +54,7 @@ function displayRecognizedText(text: any, err: any) {
         out.innerHTML = '<div class="errorMessage">' + err + '</div>'
     } else {
         if(text == "")
-            out.innerHTML = '<div class="noWordFound">No text was found.</div>';
+            out.innerHTML = '';
         else
             out.innerHTML = '<div class="selectWordItem" onclick="choseWord(\'' + text + '\')">' + text + '</div>';
     }
