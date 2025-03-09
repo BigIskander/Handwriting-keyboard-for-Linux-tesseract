@@ -130,9 +130,11 @@ In this case (above), to recognize hand written pattern programm will use Tesser
 
 5) If you use the program with PaddleOCR. PaddleOCR downloads model data at first use, then it can be used offline. List of available languages can be found by this [link](https://paddlepaddle.github.io/PaddleOCR/main/en/ppocr/blog/multi_languages.html#5-support-languages-and-abbreviations).
 
-6) As for keyboard input:
+6) If you use the program with PaddleOCR and it is installed in conda environment, you neet to activete conda environment first, and then launch this program.
+
+7) As for keyboard input:
     - **xdotool** - only supports X11 desktop environment 
-    - **ydotool** - works in X11 and Wayland desktop environment ydotool can type only latin characters and ydotoold process should be running in order to ydotool to work
+    - **ydotool** - works in X11 and Wayland desktop environment ydotool can type only latin characters and **ydotoold** process should be running (in background or in separate terminal) in order to **ydotool** to work
     - instead of typing program can copy the text to clipboard and paste by trigerring ***ctrl+V*** (or ***shift+ctrl+V***)
 
 ## Some technical details
