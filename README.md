@@ -19,7 +19,7 @@ This is the instruction for version 2, instruction for version 1 is located at v
 2) press recognize button 
 3) press to recognized text, programm will type this text or copy to clipboard and paste by triggering ctrl+V (or shift+ctrl+V) keypress
 
-Note: before using the programm you need to install dependencies.
+Note: before using the programm you need to install [dependencies](#installing-dependencies).
 
 ## Command line options 
 
