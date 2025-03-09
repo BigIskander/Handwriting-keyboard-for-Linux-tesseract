@@ -29,7 +29,6 @@ function recognizing_style(is_recognizing: Boolean = true) {
 
 async function recognizeText() {
     if(!isRecognizing) {
-        console.log("Recognizing...");
         isRecognizing = true;
         // @ts-ignore
         var image_data = await mycan.toDataURL().split('base64,')[1];
@@ -144,19 +143,23 @@ var can;
 })();
 
 function erase() {
-    // @ts-ignore
-    can.erase();
-    out.innerHTML = "";
-    recognize_button.style.fontWeight = "normal";
+    if(!isRecognizing) {
+        // @ts-ignore
+        can.erase();
+        out.innerHTML = "";
+        recognize_button.style.fontWeight = "normal";
+    }
 }
 
 async function choseWord(word: String, is_erase: Boolean = true) {
-    if(use_clipboard == true) await writeText(String(word));
-    await invoke('write_text', { 
-        text: word, useClipboard: use_clipboard 
-    }).then(() => { 
-        if(is_erase) erase(); 
-    }).catch((err) => { displayRecognizedText("", err); });
+    if(!isRecognizing) {
+        if(use_clipboard == true) await writeText(String(word));
+        await invoke('write_text', { 
+            text: word, useClipboard: use_clipboard 
+        }).then(() => { 
+            if(is_erase) erase(); 
+        }).catch((err) => { displayRecognizedText("", err); });
+    }
 }
 
 export {
