@@ -123,11 +123,13 @@ function erase() {
     recognize_button.style.fontWeight = "normal";
 }
 
-async function choseWord(word: String) {
+async function choseWord(word: String, is_erase: Boolean = true) {
     if(use_clipboard == true) await writeText(String(word));
     await invoke('write_text', { 
         text: word, useClipboard: use_clipboard 
-    }).then(() => { erase(); }).catch((err) => { displayRecognizedText("", err); });
+    }).then(() => { 
+        if(is_erase) erase(); 
+    }).catch((err) => { displayRecognizedText("", err); });
 }
 
 export {
