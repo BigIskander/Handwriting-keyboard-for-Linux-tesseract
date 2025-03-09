@@ -10,17 +10,32 @@ var out: HTMLElement = document.getElementById('results');
 // @ts-ignore
 var recognize_button: HTMLElement = document.getElementById('recognize_button');
 
+function recognizing_style(is_recognizing: Boolean = true) {
+    if(is_recognizing) {
+        document.body.style.cursor = "wait";
+        // @ts-ignore
+        mycan.style.cursor = "wait";
+    } else {
+        document.body.style.cursor = "default";
+        // @ts-ignore
+        mycan.style.cursor = "crosshair";
+    }
+}
+
 async function recognizeText() {
     // @ts-ignore
     var image_data = await mycan.toDataURL().split('base64,')[1];
+    recognizing_style(true);
     // @ts-ignore
     await invoke('recognize_text', { 
         base64Image: image_data, isDarkTheme: is_dark_theme 
     }).then((response) => { 
         // @ts-ignore
         displayRecognizedText(response.replace(/(?:\r\n|\r|\n|\t)/g, ' ').replace(/(?:\s\s+)/g, ' ').trim(), null); 
+        recognizing_style(false);
     }).catch((err) => { 
-        displayRecognizedText("", err) 
+        displayRecognizedText("", err);
+        recognizing_style(false);
     });
     recognize_button.style.fontWeight = "normal";
 }
@@ -29,7 +44,10 @@ function displayRecognizedText(text: any, err: any) {
     if(err) {
         out.innerHTML = '<div class="errorMessage">' + err + '</div>'
     } else {
-        out.innerHTML = '<div class="selectWordItem" onclick="choseWord(\'' + text + '\')">' + text + '</div>';
+        if(text == "")
+            out.innerHTML = '<div class="noWordFound">No text was found.</div>';
+        else
+            out.innerHTML = '<div class="selectWordItem" onclick="choseWord(\'' + text + '\')">' + text + '</div>';
     }
 }
 

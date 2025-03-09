@@ -43,6 +43,12 @@ body {
     margin-bottom: 2px;
     padding-left: 5px;
 }
+.noWordFound {
+    font-size: x-large;
+    margin-left: 3px;  
+    padding-left: 5px; 
+    padding-right: 5px;
+}
 .internalLink, .internalLinkRed, .internalLinkGreen {
     color: darkblue;
     box-shadow: 0px 2px lightblue;
