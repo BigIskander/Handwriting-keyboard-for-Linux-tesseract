@@ -133,7 +133,7 @@ In this case (above), to recognize hand written pattern program will use Tessera
 
 3) By default program uses Tesseract OCR with language set as **chi_all**, *.traineddata files for which you can download by [this link](https://github.com/gumblex/tessdata_chi).
 
-4) PaddleOCR is significantly more accurate than Tesseract OCR, at least in regognizing chinese characters, however it is also slower at least on my hardware.
+4) PaddleOCR is significantly more accurate than Tesseract OCR, at least in regognizing Chinese characters, however it is also slower at least on my hardware.
 
 5) If you use the program with PaddleOCR. PaddleOCR downloads model data at first use, then it can be used offline. List of available languages can be found by this [link](https://paddlepaddle.github.io/PaddleOCR/main/en/ppocr/blog/multi_languages.html#5-support-languages-and-abbreviations).
 
