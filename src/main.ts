@@ -54,8 +54,11 @@ function displayRecognizedText(text: any, err: any) {
     } else {
         if(text == "")
             out.innerHTML = '';
-        else
-            out.innerHTML = '<div class="selectWordItem" onclick="choseWord(\'' + text + '\')">' + text + '</div>';
+        else {
+            out.innerHTML = '<div class="selectWordItem" onclick="choseWord(this.innerText)">' +
+                                 text.replaceAll("<", "&lt;").replaceAll(">", "&gt;") + 
+                            '</div>';
+        } 
     }
 }
 
