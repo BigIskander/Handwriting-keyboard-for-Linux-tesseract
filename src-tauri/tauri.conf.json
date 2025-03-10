@@ -37,7 +37,7 @@
         {
           "name": "use-paddle-ocr",
           "takesValue": false,
-          "description": "Use PaddleOCR to recognize handwriting pattern. By default program uses Tesseract OCR."
+          "description": "Use PaddleOCR to recognize handwriting pattern. \nBy default program uses Tesseract OCR."
         },
         {
           "name": "lang",
@@ -48,7 +48,7 @@
         {
           "name": "tessdata-dir",
           "takesValue": true,
-          "description": "A directory with *.traineddata files for Tesseract OCR engine. Tesseract OCR specefic."
+          "description": "A directory with *.traineddata files for Tesseract OCR engine. \nTesseract OCR specefic."
         },
         {
           "name": "automode",
@@ -69,12 +69,12 @@
         {
           "name": "use-clipboard",
           "takesValue": false,
-          "description": "Copy text to clipboard and paste it via triggering ctrl+V (or shift+ctrl+V) \nkyepress to paste the text. \nBy default program will try to type text (ydotool only supports typing latin characters)."
+          "description": "Copy text to clipboard and paste it via triggering ctrl+V (or shift+ctrl+V) \nkyepress to paste the text. \nBy default program will try to type text \n(ydotool only supports typing latin characters)."
         },
         {
           "name": "use-shift",
           "takesValue": false,
-          "description": "Trigger shift+ctrl+V kyepress to paste text from clipboard. By default program uses ctrl+V. \nOnly applyed when '--use-clipboard' option is set."
+          "description": "Trigger shift+ctrl+V kyepress to paste text from clipboard. \nBy default program uses ctrl+V. \nOnly applyed when '--use-clipboard' option is set."
         },
          {
           "name": "return-focus",
@@ -84,7 +84,7 @@
         {
           "name": "fly-to-bottom",
           "takesValue": false,
-          "description": "At launch program window will fly to the bottom of the screen and resize to screen width."
+          "description": "At launch program window will fly to the bottom of the screen \nand resize to screen width."
         },
         {
           "name": "skip-taskbar",

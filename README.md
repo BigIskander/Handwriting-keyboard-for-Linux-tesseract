@@ -17,9 +17,9 @@ This is the instruction for version 2, instruction for version 1 is located at v
 0) Launch the program with or without command line options 
 1) write text in the canvas by using mouse or stylus (on graphical tablet) 
 2) press 'recognize' button 
-3) press to recognized text, programm will type this text or copy to clipboard and paste by triggering ***ctrl+V*** (or ***shift+ctrl+V***) keypress
+3) press to recognized text, program will type this text or copy to clipboard and paste by triggering ***ctrl+V*** (or ***shift+ctrl+V***) keypress
 
-Note: before using the programm you need to install [dependencies](#installing-dependencies).
+Note: before using the program you need to install [dependencies](#installing-dependencies).
 
 If program's window is in focus, before sending keyboard input program will trigger ***alt+Tab*** keypress to return focus to previous active window and only then send the input (this does not applied when '--skip-taskbar' option is set).
 
@@ -30,14 +30,16 @@ Usage: handwriting-keyboard-t [OPTIONS]
 
 Options:
       --use-paddle-ocr...
-          Use PaddleOCR to recognize handwriting pattern. By default program uses Tesseract OCR.
+          Use PaddleOCR to recognize handwriting pattern. 
+          By default program uses Tesseract OCR.
 
   -l, --lang <lang>
           Language used to recognize handwriting pattern. Value depends on OCR engine. 
           Default value is 'chi_all' for Tesseract OCR and 'ch' for PaddleOCR.
 
       --tessdata-dir <tessdata-dir>
-          A directory with *.traineddata files for Tesseract OCR engine. Tesseract OCR specefic.
+          A directory with *.traineddata files for Tesseract OCR engine. 
+          Tesseract OCR specefic.
 
   -a, --automode...
           Automatically send recognize text request to OCR engine after every stroke.
@@ -52,10 +54,12 @@ Options:
       --use-clipboard...
           Copy text to clipboard and paste it via triggering ctrl+V (or shift+ctrl+V) 
           kyepress to paste the text. 
-          By default program will try to type text (ydotool only supports typing latin characters).
+          By default program will try to type text 
+          (ydotool only supports typing latin characters).
 
       --use-shift...
-          Trigger shift+ctrl+V kyepress to paste text from clipboard. By default program uses ctrl+V. 
+          Trigger shift+ctrl+V kyepress to paste text from clipboard. 
+          By default program uses ctrl+V. 
           Only applyed when '--use-clipboard' option is set.
 
       --return-focus...
@@ -64,7 +68,8 @@ Options:
           Will not work if option '--skip-taskbar' is set.
 
       --fly-to-bottom...
-          At launch program window will fly to the bottom of the screen and resize to screen width.
+          At launch program window will fly to the bottom of the screen 
+          and resize to screen width.
 
       --skip-taskbar...
           Program window will skip taskbar.
@@ -88,7 +93,7 @@ Example of using command line options:
 handwriting-keyboard-t --tessdata-dir=/home/user/ --lang=chi_sim -a
 ```
 
-In this case (above), to recognize hand written pattern program will use Tesseract OCR (as default OCR engine) with training data from folder "**/home/user/**" and language "**chi_sim**" (Chinese simplified), particularly the file "**/home/user/chi_sim.traineddata**". Also in this case the program will automatically send request to tesseract-ocr after every stroke, because it was launched with "**-a**" parameter.
+In this case (above), to recognize hand written pattern program will use Tesseract OCR (as default OCR engine) with training data from folder "**/home/user/**" and language "**chi_sim**" (Chinese simplified), particularly the file "**/home/user/chi_sim.traineddata**". Also in this case the program will automatically send request to tesseract-ocr after every stroke, because it was launched with "**-a**" option.
 
 ## Installing dependencies
 
@@ -124,7 +129,7 @@ In this case (above), to recognize hand written pattern program will use Tessera
 
 1) If you use the program with Tesseract OCR, I would recommend to install tesseract 4 (instead of tesseract 5). Because the results is more accurate when using with tesseract 4 (at least for recognition of text (writing) in Chinese language).
 
-2) If you use the program with Tesseract OCR, you also need to download model data for tesseract-ocr and copy [.traineddata](https://github.com/tesseract-ocr/tessdata) files to data folder of tesseract-ocr (for example for tesseract-ocr 4.0 it would be this folder **/usr/share/tesseract-ocr/4.00/tessdata/**). Or alternatively you can put these files in whatever folder you like and run program with `--tessdata-dir` cli option and point to the folder where model data files are located.
+2) If you use the program with Tesseract OCR, you also need to download model data for tesseract-ocr and copy [.traineddata](https://github.com/tesseract-ocr/tessdata) files to data folder of tesseract-ocr (for example for tesseract-ocr 4.0 it would be this folder **/usr/share/tesseract-ocr/4.00/tessdata/**). Or alternatively you can put these files in whatever folder you like and run program with `--tessdata-dir` command line option and point to the folder where model data files are located.
 
 3) By default program uses Tesseract OCR with language set as **chi_all**, *.traineddata files for which you can download by [this link](https://github.com/gumblex/tessdata_chi).
 
@@ -168,7 +173,7 @@ Run program in development environment with cli (command line) oprions:
 npm run tauri dev -- -- -- cli_options
 ```
 
-Compile the programm: 
+Compile the program: 
 
 ```
 npm run tauri build
