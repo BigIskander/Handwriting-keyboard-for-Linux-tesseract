@@ -76,10 +76,15 @@
           "takesValue": false,
           "description": "Trigger shift+ctrl+V kyepress to paste text from clipboard. \nBy default program uses ctrl+V. \nOnly applyed when '--use-clipboard' option is set."
         },
-         {
+        {
           "name": "return-focus",
           "takesValue": false,
           "description": "Program will return focus to previous window by triggering alt+Tab kyepress \nevery time when program gains focus (after mouseup event inside the window). \nWill not work if option '--skip-taskbar' is set."
+        },
+        {
+          "name": "return-keyboard",
+          "takesValue": false,
+          "description": "After sending keyboard input program will trigger alt+Tab keypress \nto return focus back to keyboad's window. \nWill not work if option '--skip-taskbar' is set."
         },
         {
           "name": "fly-to-bottom",

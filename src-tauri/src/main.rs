@@ -67,6 +67,12 @@ static USE_SHIFT_CTRL_V: Mutex<String> = {
     Mutex::new(use_shift_ctrl_v)
 };
 
+// return-keyboard
+static RETURN_KEYBOARD: Mutex<String> = {
+    let return_keyboard = String::new();
+    Mutex::new(return_keyboard)
+};
+
 #[tauri::command(async)]
 fn recognize_text(app: tauri::AppHandle, base_64_image: String, is_dark_theme: bool) -> Result<String, String> {
     let use_paddle_ocr = USE_PADDLE_OCR.lock().unwrap();
@@ -104,9 +110,9 @@ fn alt_tab() {
     let use_ydotool = USE_YDOTOOL.lock().unwrap();
     let alt_tab_result: Result<(), String>;
     if !use_ydotool.is_empty() {
-        alt_tab_result = sendinput::ydotool_alt_tab();
+        alt_tab_result = sendinput::ydotool_alt_tab(None);
     } else {
-        alt_tab_result = sendinput::xdotool_alt_tab();
+        alt_tab_result = sendinput::xdotool_alt_tab(None);
     }
     let debug = DEBUG.lock().unwrap();
     if !debug.is_empty() && alt_tab_result.is_err() {
@@ -237,6 +243,10 @@ fn main() {
                     let use_shift_ctrl_v = &matches.args.get("use-shift").expect("Error reading CLI.").value;
                     if use_shift_ctrl_v == true {
                         USE_SHIFT_CTRL_V.lock().unwrap().insert_str(0, "ok");
+                    }
+                    let return_keyboard = &matches.args.get("return-keyboard").expect("Error reading CLI.").value;
+                    if return_keyboard == true {
+                        RETURN_KEYBOARD.lock().unwrap().insert_str(0, "ok");
                     }
                 }
                 Err(err) => { 

@@ -1,12 +1,15 @@
 use std::process::Command;
 use tauri::Manager;
+use std::{thread, time};
 
 // import global variables
 use crate::DEBUG;
 use crate::SKIP_TASKBAR;
 use crate::USE_SHIFT_CTRL_V;
+use crate::RETURN_KEYBOARD;
 
 pub fn xdotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bool) -> Result<(), String> {
+    let return_keyboard = RETURN_KEYBOARD.lock().unwrap();
     let debug = DEBUG.lock().unwrap();
     if !debug.is_empty() {
         println!("Writing text using xdotool.");
@@ -47,13 +50,22 @@ pub fn xdotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bo
     if comm_output_stderr != "" {
         return Err("Xdotool call, Error: ".to_string() + &comm_output_stderr);
     }
+    // return focus back to keyboard's window
+    if !return_keyboard.is_empty() && in_focus && skip_taskbar.is_empty() {
+        return xdotool_alt_tab(Some(!debug.is_empty()));
+    }
     return Ok(());
 }
 
-pub fn xdotool_alt_tab() -> Result<(), String> {
-    let debug = DEBUG.lock().unwrap();
+pub fn xdotool_alt_tab(to_debug: Option<bool>) -> Result<(), String> {
+    let is_debug: bool;
+    if let Some(debug_debug) = to_debug {
+        is_debug = debug_debug;
+    } else {
+        is_debug = !DEBUG.lock().unwrap().is_empty();
+    }
     let comm_args = ["key", "--delay", "100", "alt+Tab"];
-    if !debug.is_empty() {
+    if is_debug == true {
         println!("Triggering alt+Tab keypress using xdotool.");
         println!("Executing command: xdotool");
         print!("Command args: ");
@@ -71,6 +83,7 @@ pub fn xdotool_alt_tab() -> Result<(), String> {
 }
 
 pub fn ydotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bool) -> Result<(), String> {
+    let return_keyboard = RETURN_KEYBOARD.lock().unwrap();
     let debug = DEBUG.lock().unwrap();
     if !debug.is_empty() {
         println!("Writing text using ydotool.");
@@ -80,7 +93,11 @@ pub fn ydotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bo
     let mut comm_args = [].to_vec();
     let skip_taskbar = SKIP_TASKBAR.lock().unwrap();
     if in_focus && skip_taskbar.is_empty() {
-        comm_args.append(&mut ["key", "56:1", "15:1", "56:0", "15:0"].to_vec());
+        let alt_tab = ydotool_alt_tab(Some(!debug.is_empty()));
+        if alt_tab.is_err() {
+            return alt_tab;
+        }
+        thread::sleep(time::Duration::from_millis(100));
     }
     if use_clipboard {
         if in_focus && !skip_taskbar.is_empty() {
@@ -114,13 +131,23 @@ pub fn ydotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bo
             return Err("Ydotool call, Error: ".to_string() + &output);
         }
     }
+    // return focus back to keyboard's window
+    if !return_keyboard.is_empty() && in_focus && skip_taskbar.is_empty() {
+        // thread::sleep(time::Duration::from_millis(100));
+        return ydotool_alt_tab(Some(!debug.is_empty()));
+    }
     return Ok(());
 }
 
-pub fn ydotool_alt_tab() -> Result<(), String> {
-    let debug = DEBUG.lock().unwrap();
+pub fn ydotool_alt_tab(to_debug: Option<bool>) -> Result<(), String> {
+    let is_debug: bool;
+    if let Some(debug_debug) = to_debug {
+        is_debug = debug_debug;
+    } else {
+        is_debug = !DEBUG.lock().unwrap().is_empty();
+    }
     let comm_args = ["key", "56:1", "15:1", "56:0", "15:0"];
-    if !debug.is_empty() {
+    if is_debug {
         println!("Triggering alt+Tab keypress using ydotool.");
         println!("Executing command: ydotool");
         print!("Command args: ");
