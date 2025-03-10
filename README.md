@@ -4,11 +4,11 @@ This is program written for Linux desktop environment.
 
 To recognize handwritten pattern program uses OCR engine.
 
-At the moment program supports 2 OCR engines, which is: Tesseract OCR and PaddleOCR.
+At the moment program supports 2 OCR engines: Tesseract OCR and PaddleOCR.
 
 To send the keyboard input program uses xdotool or ydotool.
 
-You can find compiled .deb and .AppImage packages in releases page.
+You can find compiled .deb, .rpm and .AppImage packages in releases page.
 
 This is the instruction for version 2, instruction for version 1 is located at v1 branch of this repository.
 
@@ -16,12 +16,12 @@ This is the instruction for version 2, instruction for version 1 is located at v
 
 0) Launch the program with or without command line options 
 1) write text in the canvas by using mouse or stylus (on graphical tablet) 
-2) press recognize button 
-3) press to recognized text, programm will type this text or copy to clipboard and paste by triggering ctrl+V (or shift+ctrl+V) keypress
+2) press 'recognize' button 
+3) press to recognized text, programm will type this text or copy to clipboard and paste by triggering ***ctrl+V*** (or ***shift+ctrl+V***) keypress
 
 Note: before using the programm you need to install [dependencies](#installing-dependencies).
 
-If programs window is in focus, before sending keyboard input program will trigger alt+Tab keypress to return focus to previous active window and only then send the input (this does not applied when '--skip-taskbar' option is set).
+If program's window is in focus, before sending keyboard input program will trigger ***alt+Tab*** keypress to return focus to previous active window and only then send the input (this does not applied when '--skip-taskbar' option is set).
 
 ## Command line options 
 
@@ -88,11 +88,11 @@ Example of using command line options:
 handwriting-keyboard-t --tessdata-dir=/home/user/ --lang=chi_sim -a
 ```
 
-In this case (above), to recognize hand written pattern programm will use Tesseract OCR (as default OCR engine) with training data from folder "**/home/user/**" and language "**chi_sim**" (Chinese simplified), particularly the file "**/home/user/chi_sim.traineddata**". Also in this case the programm will automatically send request to tesseract-ocr after every stroke, because it was launched with "**-a**" parameter.
+In this case (above), to recognize hand written pattern program will use Tesseract OCR (as default OCR engine) with training data from folder "**/home/user/**" and language "**chi_sim**" (Chinese simplified), particularly the file "**/home/user/chi_sim.traineddata**". Also in this case the program will automatically send request to tesseract-ocr after every stroke, because it was launched with "**-a**" parameter.
 
 ## Installing dependencies
 
-1) Install preferred OCR engine Tesseract OCR or/and PaddleOCR.
+1) Install OCR engine: Tesseract OCR or/and PaddleOCR.
     - in debian based linux system you can install Tesseract OCR from repository:
         ```
         sudo apt install tesseract-ocr
@@ -116,15 +116,15 @@ In this case (above), to recognize hand written pattern programm will use Tesser
         sudo apt install xdotool
         ```
         for other linux distributions you can find instructions in their github repository: https://github.com/jordansissel/xdotool?tab=readme-ov-file#installation
-    - to install ydotool, I would recommend:
+    - to install ydotool, I would recommend to:
         1) compile ydotool from source code in their repository: https://github.com/ReimuNotMoe/ydotool?tab=readme-ov-file#build
         2) then copy **ydotool** and **ydotoold** binaries into **~/bin** folder 
 
 ## Notes about dependencies
 
-1) If you use the program with Tesseract OCR, I would recommend to install tesseract 4 (instead of tesseract 5). Because the results is the most accurate when using with tesseract 4 (at least for recognition of text (writing) in Chinese language).
+1) If you use the program with Tesseract OCR, I would recommend to install tesseract 4 (instead of tesseract 5). Because the results is more accurate when using with tesseract 4 (at least for recognition of text (writing) in Chinese language).
 
-2) If you use the  with Tesseract OCR, you also need to download model data for tesseract-ocr and copy [.traineddata](https://github.com/tesseract-ocr/tessdata) files to data folder of tesseract-ocr (for example for tesseract-ocr 4.0 it would be this folder **/usr/share/tesseract-ocr/4.00/tessdata/**). Or alternatively you can put these files in watever folder you like and run program with `--tessdata-dir` cli parameter and point to the folder where model data files are located.
+2) If you use the program with Tesseract OCR, you also need to download model data for tesseract-ocr and copy [.traineddata](https://github.com/tesseract-ocr/tessdata) files to data folder of tesseract-ocr (for example for tesseract-ocr 4.0 it would be this folder **/usr/share/tesseract-ocr/4.00/tessdata/**). Or alternatively you can put these files in whatever folder you like and run program with `--tessdata-dir` cli option and point to the folder where model data files are located.
 
 3) By default program uses Tesseract OCR with language set as **chi_all**, *.traineddata files for which you can download by [this link](https://github.com/gumblex/tessdata_chi).
 
@@ -132,12 +132,12 @@ In this case (above), to recognize hand written pattern programm will use Tesser
 
 5) If you use the program with PaddleOCR. PaddleOCR downloads model data at first use, then it can be used offline. List of available languages can be found by this [link](https://paddlepaddle.github.io/PaddleOCR/main/en/ppocr/blog/multi_languages.html#5-support-languages-and-abbreviations).
 
-6) If you use the program with PaddleOCR and it is installed in conda environment, you neet to activete conda environment first, and then launch this program.
+6) If you use the program with PaddleOCR and it is installed in conda environment, you need to activete conda environment first and then launch this program.
 
-7) As for keyboard input:
+7) As for sending keyboard input:
     - **xdotool** - only supports X11 desktop environment 
-    - **ydotool** - works in X11 and Wayland desktop environment ydotool can type only latin characters and **ydotoold** process should be running (in background or in separate terminal) in order to **ydotool** to work
-    - instead of typing program can copy the text to clipboard and paste by trigerring ***ctrl+V*** (or ***shift+ctrl+V***)
+    - **ydotool** - works in X11 and Wayland desktop environment, ydotool can type only latin characters and **ydotoold** process should be running (in background or in separate terminal) in order to **ydotool** to work
+    - instead of typing program can copy the text to clipboard and paste by trigerring ***ctrl+V*** (or ***shift+ctrl+V***) keypress
 
 ## Some technical details
 
@@ -151,15 +151,30 @@ To send keyboard input program uses [xdotool](https://github.com/jordansissel/xd
 
 In order to run from code or compile the programm: You need to install [Node.js 20](https://nodejs.org/en) or newer version and [Rust](https://www.rust-lang.org/) as well.
 
-Install Node.js dependencies: `npm install`
+Install Node.js dependencies: 
+```
+npm install
+```
 
-Run program in development environment: `npm run tauri dev`
+Run program in development environment: 
 
-Run program in development environment with cli (command line) oprions: `npm run tauri dev -- -- -- cli_options`
+```
+npm run tauri dev
+```
 
-Compile the programm: `npm run tauri build`
+Run program in development environment with cli (command line) oprions: 
 
-Older version of this program using Google API instead of tesseract-ocr is available by this link: [https://github.com/BigIskander/Handwriting-keyboard-for-Linux.](https://github.com/BigIskander/Handwriting-keyboard-for-Linux.)
+```
+npm run tauri dev -- -- -- cli_options
+```
+
+Compile the programm: 
+
+```
+npm run tauri build
+```
+
+Older version of this program using Google API instead is available by this link: [https://github.com/BigIskander/Handwriting-keyboard-for-Linux.](https://github.com/BigIskander/Handwriting-keyboard-for-Linux.)
 
 ## Recommended IDE Setup
 
