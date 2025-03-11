@@ -144,6 +144,24 @@ In this case (above), to recognize hand written pattern program will use Tessera
     - **ydotool** - works in X11 and Wayland desktop environment, ydotool can type only latin characters and **ydotoold** process should be running (in background or in separate terminal) in order to **ydotool** to work
     - instead of typing program can copy the text to clipboard and paste by trigerring ***ctrl+V*** (or ***shift+ctrl+V***) keypress
 
+## Notes about Wayland
+
+This program (application) can work in Wayland desktop environment, however it is not fully supported.
+
+Some specifics of using this program in Wayland:
+
+1) **Always on top** property of the window can not be set programmatically. As workaround you can set it manually by right clicking on title bar of the window and checking 'Always on top' option (it should work, at least in gnome based desktop environment).
+
+2) **set_accept_focus(false)** property of the window is not working in Wayland. Program's window will gain focus anyway (when interacting with it).
+
+3) **--skip-taskbar** command line option will not work in Wayland.
+
+4) **--fly-to-bottom** command line option will not position program's window correctly.
+
+5) **Xdotool** does not support Wayland. For that reasoun I would recommend to use this program with **ydotool** instead.
+
+6) If you use this program in Wayland desktop environment. I would recommed to launch it with **--use-ydotool** and **--use-clipboard** command line options.
+
 ## Some technical details
 
 Program written by using tauri framework https://tauri.app/
