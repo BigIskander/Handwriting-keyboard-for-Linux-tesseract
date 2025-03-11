@@ -67,6 +67,11 @@ Options:
           every time when program gains focus (after mouseup event inside the window). 
           Will not work if option '--skip-taskbar' is set.
 
+      --return-keyboard...
+          After sending keyboard input program will trigger alt+Tab keypress 
+          to return focus back to keyboad's window. 
+          Will not work if option '--skip-taskbar' is set.
+
       --fly-to-bottom...
           At launch program window will fly to the bottom of the screen 
           and resize to screen width.
