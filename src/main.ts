@@ -4,12 +4,18 @@ import { LogicalSize, LogicalPosition } from '@tauri-apps/api/dpi';
 import { invoke } from '@tauri-apps/api/core';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { getMatches } from '@tauri-apps/plugin-cli';
+// @ts-ignore
+import { autoCorrect } from "./stroke_autocorrect/strokeAutocorrect.js";
 const appWindow = getCurrentWebviewWindow();
 // @ts-ignore
 var out: HTMLElement = document.getElementById('results');
 // @ts-ignore
 var recognize_button: HTMLElement = document.getElementById('recognize_button');
 var recognize_button_link: HTMLElement = recognize_button.getElementsByTagName('a')[0];
+// @ts-ignore
+var isAutocorrectElement: HTMLElement = document.getElementById('isAutocorrect');
+// @ts-ignore
+var isPunctuationElement: HTMLElement = document.getElementById('isPunctuation');
 var isRecognizing = false;
 
 function recognizing_style(is_recognizing: Boolean = true) {
@@ -50,7 +56,9 @@ async function recognizeText() {
 
 function displayRecognizedText(text: any, err: any) {
     if(err) {
-        out.innerHTML = '<div class="errorMessage">' + err + '</div>'
+        out.innerHTML = '<div class="errorMessage">' + 
+                             err.replaceAll("<", "&lt;").replaceAll(">", "&gt;") + 
+                        '</div>'
     } else {
         if(text == "")
             out.innerHTML = '';
@@ -96,6 +104,30 @@ var can;
     }
     //Set line width shown on the canvas element (default: 3)
     can.setLineWidth(5);
+    // add autocorrect capability
+    if(Boolean(args.args["stroke-autocorrect"].value)) {
+        can.setAutocorrect(true, autoCorrect);
+        isAutocorrectElement.style.visibility = "visible";
+    }
+    // add common Chinese punctuation
+    if(Boolean(args.args["common-punctuation"].value)) {
+        isPunctuationElement.style.visibility = "visible";
+    }
+    // change canvas size if needed
+    if(Boolean(args.args["stroke-autocorrect"].value) || Boolean(args.args["common-punctuation"].value)) {
+        voffset = 110;
+        mycan.setAttribute('height', String(window.outerHeight  - voffset));
+        // @ts-ignore
+        can.height = window.outerHeight - voffset;
+        if(is_dark_theme) {
+            can.setFillStyle("black");
+            can.setStrokeColor("white");
+        } else {
+            can.setFillStyle("white");
+            can.setStrokeColor("black");
+        }
+    }
+    // ...
     window.onresize = () => { 
         mycan.setAttribute('width', String(window.outerWidth - offset));
         mycan.setAttribute('height', String(window.outerHeight - voffset));
@@ -165,8 +197,14 @@ async function choseWord(word: String, is_erase: Boolean = true) {
     }
 }
 
+function setAutocorrect(value: boolean) {
+    // @ts-ignore
+    can.setAutocorrect(value);
+}
+
 export {
     erase,
     choseWord,
-    recognizeText
+    recognizeText,
+    setAutocorrect
 }

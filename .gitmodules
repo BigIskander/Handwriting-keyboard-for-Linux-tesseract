@@ -1,0 +1,3 @@
+[submodule "src/stroke_autocorrect"]
+	path = src/stroke_autocorrect
+	url = https://github.com/BigIskander/stroke_autocorrect.git
