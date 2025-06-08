@@ -196,7 +196,7 @@ Run program in development environment:
 npm run tauri dev
 ```
 
-Run program in development environment with cli (command line) oprions: 
+Run program in development environment with cli (command line) options: 
 
 ```
 npm run tauri dev -- -- -- cli_options
