@@ -155,7 +155,7 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
     if !use_tmp_file.is_empty() {
         let image_path = save_temp_file(vec8_image, &debug).map_err(|err| err)?;
         // call PaddleOCR
-        let comm_args = ["--image_dir", &image_path, "--use_angle_cls", "true", "--det", "false", "--lang", &lang];
+        let comm_args = ["--image_dir", &image_path, "--use_angle_cls", "true", "--det", "true", "--lang", &lang];
         if !debug.is_empty() {
             println!("Executing command: paddleocr");
             print!("Command args: ");
@@ -174,7 +174,7 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
             .resolve("python/run_paddle_ocr.py", BaseDirectory::Resource)
             .map_err(|err| err.to_string())?;
         let run_file = resource_path.to_str().unwrap();
-        let comm_args = [run_file, &lang];
+        let comm_args = [run_file, &lang, "multiline"];
         if !debug.is_empty() {
             println!("Executing command: python3");
             print!("Command args: ");
@@ -217,7 +217,12 @@ pub fn paddle_ocr_recognize_text(app: tauri::AppHandle, base_64_image: String, i
         return Err("PaddleOCR api call, Error: ".to_string() + &err_found.to_string());
     }
     // parse PaddleOCR stdout output
-    let re = Regex::new(r"ppocr\s{0,}INFO:\s{0,}\(\'(?<w>.{0,})\'\,.{0,}\)").unwrap();
+    let re: Regex;
+    if !use_tmp_file.is_empty() { 
+        re = Regex::new(r"ppocr\s{0,}INFO:\s{0,}\[.{0,}\]\,\s{0,}\(\'(?<w>.{0,})\'\,.{0,}\)").unwrap();
+    } else {
+        re = Regex::new(r"ppocr\s{0,}INFO:\s{0,}\(\'(?<w>.{0,})\'\,.{0,}\)").unwrap();
+    }
     if !debug.is_empty() {
         println!("Parsing stdout output using regex.");
         print!("Regex: ");
