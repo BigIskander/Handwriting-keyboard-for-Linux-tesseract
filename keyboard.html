@@ -10,8 +10,9 @@
       var erase
       var recognizeText
       var setAutocorrect
+      var undo
     </script>
-    <script type="module" src="/src/stroke_autocorrect/handwriting.canvas.js"></script>
+    <script type="module" src="/src/handwriting.canvas.js"></script>
     <script type="module" defer>
       (async () => {
         var main = await import("/src/main.ts");
@@ -31,12 +32,12 @@
           <div id="recognize_button" style="margin-left: 15px; text-align: left; font-weight: normal;"><a onclick="recognizeText()" class="internalLinkGreen" href="JavaScript:void(0);" >Recognize.</a></div>
           <div style="text-align: right;"><a onclick="choseWord(' ', false)" class="internalLink" href="JavaScript:void(0);" >Space.</a><a onclick="erase()" href="JavaScript:void(0);" class="internalLinkRed">Clear.</a></div>
         </div>
-        <div style="display:flex; flex-direction: row;">
-          <div style="margin-top: 7px; margin-left: 7px; text-align: left; margin-right: 50px;">
+        <div style="display:grid; grid-template-columns: 2fr 3fr 1fr; margin-top: 7px;">
+          <div style="margin-left: 7px; text-align: left; margin-right: 50px;">
             <div id="isAutocorrect" style="visibility: hidden;">Stroke autocorrect: <input type="checkbox" onclick="setAutocorrect(this.checked)" checked></div>
           </div>
           <div style="text-align: left;">
-            <div id="isPunctuation" style="visibility: hidden;">
+            <div id="isPunctuation" style="visibility: visible;">
               <a onclick="choseWord('，', false)" class="internalLink" href="JavaScript:void(0);" >"，"</a>
               <a onclick="choseWord('。', false)" class="internalLink" href="JavaScript:void(0);" >"。"</a>
               <a onclick="choseWord('“', false)" class="internalLink" href="JavaScript:void(0);" >"“"</a>
@@ -45,6 +46,11 @@
               <a onclick="choseWord('～', false)" class="internalLink" href="JavaScript:void(0);" >"～"</a>
               <a onclick="choseWord('——', false)" class="internalLink" href="JavaScript:void(0);" >"——"</a>
               <a onclick="choseWord('……', false)" class="internalLink" href="JavaScript:void(0);" >"……"</a>
+            </div>
+          </div>
+          <div style="text-align: right; margin-right: 7px;">
+            <div>
+              <a onclick="" href="JavaScript:void(0);" class="internalLinkRed">&lt;--Undo</a>
             </div>
           </div>
         </div>

@@ -67,6 +67,7 @@ body {
 }
 .internalLinkRed {
     color: crimson;
+    font-weight: bold;
 }
 .dark .internalLinkRed {
     color: rgb(255, 97, 97);

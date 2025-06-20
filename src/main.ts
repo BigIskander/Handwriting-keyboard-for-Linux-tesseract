@@ -94,7 +94,7 @@ var can;
     }
     // setting up writing canvas
     // @ts-ignore
-    can = new handwriting.Canvas(mycan, is_dark_theme);
+    can = new handwriting.Canvas(mycan);
     if(is_dark_theme) {
         can.setFillStyle("black");
         can.setStrokeColor("white");
