@@ -102,6 +102,11 @@
           "description": "Use dark theme. Change colors of the application to dark theme."
         },
         {
+          "name": "show-grid",
+          "takesValue": false,
+          "description": "Show grid. Shows helper grid in canvas background."
+        },
+        {
           "name": "stroke-autocorrect",
           "takesValue": false,
           "description": "Stroke autocorrection function for Chinese language. Experimental function."

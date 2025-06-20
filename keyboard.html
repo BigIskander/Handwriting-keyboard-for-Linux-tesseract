@@ -26,7 +26,7 @@
   <body>
     <div class="content">
       <div id="results" class="selectWordPanel"></div>
-      <div style="display: flex; justify-content: center;"><canvas id="can" width="1000" height="200" style="border: 1px solid; cursor: crosshair;"></canvas></div>
+      <div id="can_wrapper" style="display: flex; justify-content: left;"><canvas id="can" width="1000" height="200" style="border: 1px solid; cursor: crosshair;"></canvas></div>
       <div style="margin-bottom: 5px; margin-top: 15px;">
         <div style="display:grid; grid-template-columns: 1fr 1fr;">
           <div id="recognize_button" style="margin-left: 15px; text-align: left; font-weight: normal;"><a onclick="recognizeText()" class="internalLinkGreen" href="JavaScript:void(0);" >Recognize.</a></div>
@@ -37,7 +37,7 @@
             <div id="isAutocorrect" style="visibility: hidden;">Stroke autocorrect: <input type="checkbox" onclick="setAutocorrect(this.checked)" checked></div>
           </div>
           <div style="text-align: left;">
-            <div id="isPunctuation" style="visibility: visible;">
+            <div id="isPunctuation" style="visibility: hidden;">
               <a onclick="choseWord('，', false)" class="internalLink" href="JavaScript:void(0);" >"，"</a>
               <a onclick="choseWord('。', false)" class="internalLink" href="JavaScript:void(0);" >"。"</a>
               <a onclick="choseWord('“', false)" class="internalLink" href="JavaScript:void(0);" >"“"</a>

@@ -67,7 +67,6 @@ body {
 }
 .internalLinkRed {
     color: crimson;
-    font-weight: bold;
 }
 .dark .internalLinkRed {
     color: rgb(255, 97, 97);
@@ -93,4 +92,20 @@ body {
 .dark .internalLinkGreen:hover {
     color: rgb(122, 198, 122);
     box-shadow: 0px 2px white;
+}
+.can_wrapper {
+    background-image: 
+        repeating-linear-gradient(#eee 0 1px, transparent 1px 50%),
+        repeating-linear-gradient(90deg, #eee 0 1px, transparent 1px 50%),
+        repeating-linear-gradient(45deg, #eee 0 1px, transparent 1px 50%),
+        repeating-linear-gradient(135deg, #eee 0 1px, transparent 1px 50%);
+    background-size: 200px 200px;
+    margin-left: 10px;
+}
+.dark .can_wrapper {
+    background-image: 
+        repeating-linear-gradient(#111 0 1px, transparent 1px 50%),
+        repeating-linear-gradient(90deg, #111 0 1px, transparent 1px 50%),
+        repeating-linear-gradient(45deg, #111 0 1px, transparent 1px 50%),
+        repeating-linear-gradient(135deg, #111 0 1px, transparent 1px 50%);
 }

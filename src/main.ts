@@ -75,11 +75,14 @@ var voffset = 100;
 // var bottom_offset = 40;
 var use_clipboard = false;
 var is_dark_theme = false;
+var show_grid = false;
 
 // @ts-ignore
 var mycan: HTMLElement = document.getElementById('can');
 mycan.setAttribute('width', String(window.outerWidth  - offset));
 mycan.setAttribute('height', String(window.outerHeight  - voffset));
+// @ts-ignore
+var mycan_wrap: HTMLElement = document.getElementById('can_wrapper');
 // @ts-ignore
 var can;
 
@@ -95,11 +98,10 @@ var can;
     // setting up writing canvas
     // @ts-ignore
     can = new handwriting.Canvas(mycan);
+    can.setFillStyle("transparent");
     if(is_dark_theme) {
-        can.setFillStyle("black");
         can.setStrokeColor("white");
     } else {
-        can.setFillStyle("white");
         can.setStrokeColor("black");
     }
     //Set line width shown on the canvas element (default: 3)
@@ -119,31 +121,37 @@ var can;
         mycan.setAttribute('height', String(window.outerHeight  - voffset));
         // @ts-ignore
         can.height = window.outerHeight - voffset;
+        can.setFillStyle("transparent");
         if(is_dark_theme) {
-            can.setFillStyle("black");
             can.setStrokeColor("white");
         } else {
-            can.setFillStyle("white");
             can.setStrokeColor("black");
         }
+    }
+    // set background grid
+    show_grid = Boolean(args.args["show-grid"].value);
+    if(show_grid) {
+        mycan_wrap.className = "can_wrapper";
+        // @ts-ignore
+        mycan_wrap.style.backgroundSize = mycan.height + "px " + mycan.height + "px";
     }
     // ...
     window.onresize = () => { 
         mycan.setAttribute('width', String(window.outerWidth - offset));
         mycan.setAttribute('height', String(window.outerHeight - voffset));
         // @ts-ignore
+        if(show_grid) mycan_wrap.style.backgroundSize = mycan.height + "px " + mycan.height + "px";
+        // @ts-ignore
         can.height = window.outerHeight - voffset;
         // @ts-ignore
         can.width = window.outerWidth - offset;
         // @ts-ignore
+        can.setFillStyle("transparent");
+        // @ts-ignore
         if(is_dark_theme) {
-            // @ts-ignore
-            can.setFillStyle("black");
             // @ts-ignore
             can.setStrokeColor("white");
         } else {
-            // @ts-ignore
-            can.setFillStyle("white");
             // @ts-ignore
             can.setStrokeColor("black");
         }
