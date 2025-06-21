@@ -36,9 +36,26 @@ function recognizing_style(is_recognizing: Boolean = true) {
 async function recognizeText() {
     if(!isRecognizing) {
         isRecognizing = true;
+        // prepare image
         // @ts-ignore
-        var image_data = await mycan.toDataURL().split('base64,')[1];
+        hidden_can.setAttribute("width", mycan.width);
+        // @ts-ignore
+        hidden_can.setAttribute("height", mycan.height);
+        // @ts-ignore
+        var tempContext = hidden_can.getContext("2d");
+        if(is_dark_theme) {
+            tempContext.fillStyle = "black";
+        } else {
+            tempContext.fillStyle = "white";
+        }
+        // @ts-ignore
+        tempContext.fillRect(0, 0, mycan.width, mycan.height);
+        // @ts-ignore
+        tempContext.drawImage(mycan, 0, 0);
+        // @ts-ignore
+        var image_data = await hidden_can.toDataURL().split('base64,')[1];
         recognizing_style(true);
+        // send recognize request and get result
         // @ts-ignore
         await invoke('recognize_text', { 
             base64Image: image_data, isDarkTheme: is_dark_theme 
@@ -83,6 +100,8 @@ mycan.setAttribute('width', String(window.outerWidth  - offset));
 mycan.setAttribute('height', String(window.outerHeight  - voffset));
 // @ts-ignore
 var mycan_wrap: HTMLElement = document.getElementById('can_wrapper');
+// @ts-ignore
+var hidden_can: HTMLElement = document.getElementById('hiddenCanvas');
 // @ts-ignore
 var can;
 
