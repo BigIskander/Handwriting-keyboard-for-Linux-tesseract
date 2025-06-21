@@ -229,8 +229,11 @@ SOFTWARE.
             if (this.allowRedo) {
                 this.redo_step.push(this.step.pop());
                 this.redo_trace.push(this.trace.pop());
-                this.cxt.clearRect(0, 0, this.width, this.height);
+            } else {
+                this.step.pop();
+                this.trace.pop();
             }
+            this.cxt.clearRect(0, 0, this.width, this.height);
         } else {
             if (this.allowRedo) {
                 this.redo_step.push(this.step.pop());

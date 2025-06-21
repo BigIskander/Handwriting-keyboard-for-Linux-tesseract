@@ -16,6 +16,8 @@ var recognize_button_link: HTMLElement = recognize_button.getElementsByTagName('
 var isAutocorrectElement: HTMLElement = document.getElementById('isAutocorrect');
 // @ts-ignore
 var isPunctuationElement: HTMLElement = document.getElementById('isPunctuation');
+// @ts-ignore
+var isUndoElement: HTMLElement = document.getElementById('isUndo');
 var isRecognizing = false;
 
 function recognizing_style(is_recognizing: Boolean = true) {
@@ -125,6 +127,11 @@ var can;
     }
     //Set line width shown on the canvas element (default: 3)
     can.setLineWidth(5);
+    // undo ?
+    if(Boolean(args.args["allow-undo"].value)) {
+        can.set_Undo_Redo(true, false);
+        isUndoElement.style.visibility = "visible";
+    }
     // add autocorrect capability
     if(Boolean(args.args["stroke-autocorrect"].value)) {
         can.setAutocorrect(true, autoCorrect);
@@ -213,6 +220,13 @@ function erase() {
     }
 }
 
+function undo() {
+    // @ts-ignore
+    can.undo();
+    // @ts-ignore
+    if(isRecognizing == false && can.step.length == 0) recognize_button.style.fontWeight = "normal";
+}
+
 async function choseWord(word: String, is_erase: Boolean = true) {
     if(!isRecognizing) {
         if(use_clipboard == true) await writeText(String(word));
@@ -233,5 +247,6 @@ export {
     erase,
     choseWord,
     recognizeText,
-    setAutocorrect
+    setAutocorrect,
+    undo
 }

@@ -107,6 +107,11 @@
           "description": "Show grid. Shows helper grid in canvas background."
         },
         {
+          "name": "allow-undo",
+          "takesValue": false,
+          "description": "Allow undo. Allows undo function and shows undo botton."
+        },
+        {
           "name": "stroke-autocorrect",
           "takesValue": false,
           "description": "Stroke autocorrection function for Chinese language. Experimental function."

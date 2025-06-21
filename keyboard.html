@@ -20,6 +20,7 @@
         erase = main.erase;
         recognizeText = main.recognizeText;
         setAutocorrect = main.setAutocorrect;
+        undo = main.undo;
       })();
     </script>
   </head>
@@ -49,8 +50,8 @@
             </div>
           </div>
           <div style="text-align: right; margin-right: 7px;">
-            <div>
-              <a onclick="" href="JavaScript:void(0);" class="internalLinkRed">&lt;--Undo</a>
+            <div id="isUndo" style="visibility: hidden;">
+              <a onclick="undo()" href="JavaScript:void(0);" class="internalLinkRed">&lt;--Undo</a>
             </div>
           </div>
         </div>
