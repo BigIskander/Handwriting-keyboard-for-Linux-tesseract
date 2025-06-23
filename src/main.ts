@@ -244,6 +244,7 @@ function undo() {
     } else {
         // @ts-ignore
         if(!isRecognizing && can.step.length == 0) recognize_button.style.fontWeight = "normal";
+        else recognize_button.style.fontWeight = "bold";
     }
 }
 
