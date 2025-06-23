@@ -26,18 +26,26 @@ function recognizing_style(is_recognizing: Boolean = true) {
         // @ts-ignore
         mycan.style.cursor = "wait";
         recognize_button.style.fontWeight = "normal";
-        recognize_button_link.innerText = "Recognizing...";
+        if(isAutorecognize)
+            recognize_button.innerHTML = "<em class=\"internalLinkGreen\">Recognizing...</em>";
+        else
+            recognize_button_link.innerText = "Recognizing...";
     } else {
         document.body.style.cursor = "default";
         // @ts-ignore
         mycan.style.cursor = "crosshair";
-        recognize_button_link.innerText = "Recognize.";
+        if(isAutorecognize)
+            recognize_button.innerHTML = "";
+        else
+            recognize_button_link.innerText = "Recognize.";
     }
 }
 
 async function recognizeText() {
     if(!isRecognizing) {
         isRecognizing = true;
+        if(isAutorecognize) isCanvasChanged = false;
+        recognizing_style(true);
         // prepare image
         // @ts-ignore
         hidden_can.setAttribute("width", mycan.width);
@@ -56,7 +64,6 @@ async function recognizeText() {
         tempContext.drawImage(mycan, 0, 0);
         // @ts-ignore
         var image_data = await hidden_can.toDataURL().split('base64,')[1];
-        recognizing_style(true);
         // send recognize request and get result
         // @ts-ignore
         await invoke('recognize_text', { 
@@ -70,6 +77,8 @@ async function recognizeText() {
             recognizing_style(false);
         });
         isRecognizing = false;
+        // run recognizeText again if canvas is changed 
+        if(isAutorecognize && isCanvasChanged) recognizeText();
     }
 }
 
@@ -95,6 +104,8 @@ var voffset = 100;
 var use_clipboard = false;
 var is_dark_theme = false;
 var show_grid = false;
+var isAutorecognize = false;
+var isCanvasChanged = false;
 
 // @ts-ignore
 var mycan: HTMLElement = document.getElementById('can');
@@ -182,11 +193,12 @@ var can;
             can.setStrokeColor("black");
         }
     };
-    if (args.args.automode.value == true) {
+    isAutorecognize = Boolean(args.args.automode.value);
+    if (isAutorecognize) {
         recognize_button.innerHTML = "";
-        can.setMouseUpCallBack(() => recognizeText());
+        can.setMouseUpCallBack(() => { isCanvasChanged = true; recognizeText(); });
     } else {
-        can.setMouseUpCallBack(() => { recognize_button.style.fontWeight = "bold" });
+        can.setMouseUpCallBack(() => { recognize_button.style.fontWeight = "bold"; });
     }
     // change window size and position on launch
     const monitor = await currentMonitor();
@@ -213,6 +225,7 @@ var can;
 
 function erase() {
     if(!isRecognizing) {
+        if(isAutorecognize) isCanvasChanged = false;
         // @ts-ignore
         can.erase();
         out.innerHTML = "";
@@ -224,7 +237,14 @@ function undo() {
     // @ts-ignore
     can.undo();
     // @ts-ignore
-    if(isRecognizing == false && can.step.length == 0) recognize_button.style.fontWeight = "normal";
+    if(isAutorecognize) {
+        // @ts-ignore
+        if(can.step.length != 0) { isCanvasChanged = true; recognizeText(); }
+        else { isCanvasChanged = false; out.innerHTML = "";  }
+    } else {
+        // @ts-ignore
+        if(!isRecognizing && can.step.length == 0) recognize_button.style.fontWeight = "normal";
+    }
 }
 
 async function choseWord(word: String, is_erase: Boolean = true) {
