@@ -10,7 +10,7 @@ To send the keyboard input program uses xdotool or ydotool.
 
 You can find compiled .deb, .rpm and .AppImage packages in releases page.
 
-This is the instruction for version 2, instruction for version 1 is located at v1 branch of this repository.
+This is the instruction for version 2.1. Instruction for version 2.0 is located at v2.0 branch of this repository. Instruction for version 1 is located at v1 branch of this repository.
 
 ## How to use the program
 
