@@ -54,6 +54,11 @@ SOFTWARE.
         this.redo_trace = [];
         this.allowUndo = false;
         this.allowRedo = false;
+        // modification to add autocorrect function
+        this.allowAutocorrect = false;
+        this.currentBase64 = undefined;
+        this.autocorrectFunction = undefined;
+        // ...
         cvs.addEventListener("mousedown", this.mouseDown.bind(this));
         cvs.addEventListener("mousemove", this.mouseMove.bind(this));
         cvs.addEventListener("mouseup", this.mouseUp.bind(this));
@@ -89,6 +94,12 @@ SOFTWARE.
         }
     };
 
+    // modification to add autocorrect function
+    handwriting.Canvas.prototype.setAutocorrect = function(allowAutocorrect, autocorrectFunction = undefined) {
+        this.allowAutocorrect = allowAutocorrect;
+        if(autocorrectFunction != undefined) this.autocorrectFunction = autocorrectFunction;
+    }
+
     handwriting.Canvas.prototype.setLineWidth = function(lineWidth) {
         this.lineWidth = lineWidth;
     };
@@ -107,6 +118,8 @@ SOFTWARE.
     };
 
     handwriting.Canvas.prototype.mouseDown = function(e) {
+        // modification to add autocorrect function
+        if(this.allowAutocorrect) this.currentBase64 = this.canvas.toDataURL();
         // new stroke
         this.cxt.lineWidth = this.lineWidth;
         this.handwritingX = [];
@@ -134,7 +147,7 @@ SOFTWARE.
         }
     };
 
-    handwriting.Canvas.prototype.mouseUp = function() {
+    handwriting.Canvas.prototype.mouseUp = async function() {
         var w = [];
         w.push(this.handwritingX);
         w.push(this.handwritingY);
@@ -142,11 +155,13 @@ SOFTWARE.
         this.trace.push(w);
         this.drawing = false;
         if (this.allowUndo) this.step.push(this.canvas.toDataURL());
+        // modification to add autocorrect function
+        if(this.allowAutocorrect) await this.autocorrectFunction(this);
         this.mouseUpCallBack(); //slight modification to call parent module function
     };
     
     // slight modification, fixing some minor issues
-    handwriting.Canvas.prototype.mouseOut = function() { 
+    handwriting.Canvas.prototype.mouseOut = async function() { 
         if(this.drawing) {
             var w = [];
             w.push(this.handwritingX);
@@ -155,12 +170,16 @@ SOFTWARE.
             this.trace.push(w);
             this.drawing = false;
             if (this.allowUndo) this.step.push(this.canvas.toDataURL());
+            // modification to add autocorrect function
+            if(this.allowAutocorrect) await this.autocorrectFunction(this);
             this.mouseUpCallBack();
         }
     }
 
     handwriting.Canvas.prototype.touchStart = function(e) {
         e.preventDefault();
+        // modification to add autocorrect function
+        if(this.allowAutocorrect) this.currentBase64 = this.canvas.toDataURL();
         this.cxt.lineWidth = this.lineWidth;
         this.handwritingX = [];
         this.handwritingY = [];
@@ -192,13 +211,15 @@ SOFTWARE.
         this.cxt.stroke();
     };
 
-    handwriting.Canvas.prototype.touchEnd = function(e) {
+    handwriting.Canvas.prototype.touchEnd = async function(e) {
         var w = [];
         w.push(this.handwritingX);
         w.push(this.handwritingY);
         w.push([]);
         this.trace.push(w);
         if (this.allowUndo) this.step.push(this.canvas.toDataURL());
+        // modification to add autocorrect function
+        if(this.allowAutocorrect) await this.autocorrectFunction(this);
         this.mouseUpCallBack(); // slight modification to call parent module function
     };
 
@@ -208,8 +229,11 @@ SOFTWARE.
             if (this.allowRedo) {
                 this.redo_step.push(this.step.pop());
                 this.redo_trace.push(this.trace.pop());
-                this.cxt.clearRect(0, 0, this.width, this.height);
+            } else {
+                this.step.pop();
+                this.trace.pop();
             }
+            this.cxt.clearRect(0, 0, this.width, this.height);
         } else {
             if (this.allowRedo) {
                 this.redo_step.push(this.step.pop());

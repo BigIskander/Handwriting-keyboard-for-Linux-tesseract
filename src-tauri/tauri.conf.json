@@ -25,7 +25,7 @@
   },
   "productName": "handwriting-keyboard-t",
   "mainBinaryName": "handwriting-keyboard-t",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "identifier": "com.handwriting-keyboard-t.dev",
   "plugins": {
     "cli": {
@@ -100,6 +100,26 @@
           "name": "dark-theme",
           "takesValue": false,
           "description": "Use dark theme. Change colors of the application to dark theme."
+        },
+        {
+          "name": "show-grid",
+          "takesValue": false,
+          "description": "Show grid. Shows helper grid in canvas background."
+        },
+        {
+          "name": "allow-undo",
+          "takesValue": false,
+          "description": "Allow undo. Allows undo function and shows undo botton."
+        },
+        {
+          "name": "stroke-autocorrect",
+          "takesValue": false,
+          "description": "Stroke autocorrection function for Chinese language. Experimental function."
+        },
+        {
+          "name": "common-punctuation",
+          "takesValue": false,
+          "description": "Show common Chinese punctuation."
         },
         {
           "name": "debug",
