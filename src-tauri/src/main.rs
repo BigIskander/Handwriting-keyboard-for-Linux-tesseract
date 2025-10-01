@@ -158,7 +158,7 @@ fn main() {
                         To recognize handwritten pattern program uses OCR engine. \n\
                         Github page: \n\
                         https://github.com/BigIskander/Handwriting-keyboard-for-Linux-tesseract \n\
-                        App version: 2.1.0 \n\
+                        App version: 2.1.1 \n\
                         \n\
                         launch app with '--help' command line option to Print help \n\
                       -------------------------------------------------------------------------------");
