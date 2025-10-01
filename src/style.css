@@ -95,17 +95,17 @@ body {
 }
 .can_wrapper {
     background-image: 
-        repeating-linear-gradient(#eee 0 1px, transparent 1px 50%),
-        repeating-linear-gradient(90deg, #eee 0 1px, transparent 1px 50%),
-        repeating-linear-gradient(45deg, #eee 0 1px, transparent 1px 50%),
-        repeating-linear-gradient(135deg, #eee 0 1px, transparent 1px 50%);
+        repeating-linear-gradient(#ccc 0 1px, transparent 1px 50%),
+        repeating-linear-gradient(90deg, #ccc 0 1px, transparent 1px 50%),
+        repeating-linear-gradient(45deg, #ccc 0 1px, transparent 1px 50%),
+        repeating-linear-gradient(135deg, #ccc 0 1px, transparent 1px 50%);
     background-size: 200px 200px;
     margin-left: 10px;
 }
 .dark .can_wrapper {
     background-image: 
-        repeating-linear-gradient(#111 0 1px, transparent 1px 50%),
-        repeating-linear-gradient(90deg, #111 0 1px, transparent 1px 50%),
-        repeating-linear-gradient(45deg, #111 0 1px, transparent 1px 50%),
-        repeating-linear-gradient(135deg, #111 0 1px, transparent 1px 50%);
+        repeating-linear-gradient(#333 0 1px, transparent 1px 50%),
+        repeating-linear-gradient(90deg, #333 0 1px, transparent 1px 50%),
+        repeating-linear-gradient(45deg, #333 0 1px, transparent 1px 50%),
+        repeating-linear-gradient(135deg, #333 0 1px, transparent 1px 50%);
 }
