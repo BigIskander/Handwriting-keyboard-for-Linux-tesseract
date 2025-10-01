@@ -214,7 +214,7 @@ Compile the program:
 npm run tauri build
 ```
 
-Older version of this program using Google API instead is available by this link: [https://github.com/BigIskander/Handwriting-keyboard-for-Linux.](https://github.com/BigIskander/Handwriting-keyboard-for-Linux.)
+There is also version of this program using Google API or Digital ink recognition Server instead, it is available by this link: [https://github.com/BigIskander/Handwriting-keyboard-for-Linux.](https://github.com/BigIskander/Handwriting-keyboard-for-Linux.)
 
 ## Recommended IDE Setup
 
