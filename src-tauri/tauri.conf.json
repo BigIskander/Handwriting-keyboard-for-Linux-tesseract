@@ -69,17 +69,17 @@
         {
           "name": "use-clipboard",
           "takesValue": false,
-          "description": "Copy text to clipboard and paste it via triggering ctrl+V (or shift+ctrl+V) \nkyepress to paste the text. \nBy default program will try to type text \n(ydotool only supports typing latin characters)."
+          "description": "Copy text to clipboard and paste it via triggering ctrl+V (or shift+ctrl+V) \nkeypress to paste the text. \nBy default program will try to type text \n(ydotool only supports typing latin characters)."
         },
         {
           "name": "use-shift",
           "takesValue": false,
-          "description": "Trigger shift+ctrl+V kyepress to paste text from clipboard. \nBy default program uses ctrl+V. \nOnly applyed when '--use-clipboard' option is set."
+          "description": "Trigger shift+ctrl+V keypress to paste text from clipboard. \nBy default program uses ctrl+V. \nOnly applyed when '--use-clipboard' option is set."
         },
         {
           "name": "return-focus",
           "takesValue": false,
-          "description": "Program will return focus to previous window by triggering alt+Tab kyepress \nevery time when program gains focus (after mouseup event inside the window). \nWill not work if option '--skip-taskbar' is set."
+          "description": "Program will return focus to previous window by triggering alt+Tab keypress \nevery time when program gains focus (after mouseup event inside the window). \nWill not work if option '--skip-taskbar' is set."
         },
         {
           "name": "return-keyboard",

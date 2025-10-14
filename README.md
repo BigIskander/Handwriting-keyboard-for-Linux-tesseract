@@ -53,17 +53,17 @@ Options:
 
       --use-clipboard...
           Copy text to clipboard and paste it via triggering ctrl+V (or shift+ctrl+V) 
-          kyepress to paste the text. 
+          keypress to paste the text. 
           By default program will try to type text 
           (ydotool only supports typing latin characters).
 
       --use-shift...
-          Trigger shift+ctrl+V kyepress to paste text from clipboard. 
+          Trigger shift+ctrl+V keypress to paste text from clipboard. 
           By default program uses ctrl+V. 
           Only applyed when '--use-clipboard' option is set.
 
       --return-focus...
-          Program will return focus to previous window by triggering alt+Tab kyepress 
+          Program will return focus to previous window by triggering alt+Tab keypress 
           every time when program gains focus (after mouseup event inside the window). 
           Will not work if option '--skip-taskbar' is set.
 
