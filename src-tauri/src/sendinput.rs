@@ -180,8 +180,8 @@ pub fn ydotool_keypress(app: Option<tauri::AppHandle>, to_debug: Option<bool>, k
     let mut comm_args = [].to_vec();
     match key.clone() {
         val if val == "alt+Tab".to_string() => comm_args.append(&mut ["key", "56:1", "15:1", "56:0", "15:0"].to_vec()),
-        val if val == "Enter".to_string() => comm_args.append(&mut ["key", "14:1", "14:0"].to_vec()),
-        val if val == "Backspace".to_string() => comm_args.append(&mut ["key", "28:1", "28:0"].to_vec()),
+        val if val == "Enter".to_string() => comm_args.append(&mut ["key", "28:1", "28:0"].to_vec()),
+        val if val == "Backspace".to_string() => comm_args.append(&mut ["key", "14:1", "14:0"].to_vec()),
         _ => {}
     }
     if is_debug {

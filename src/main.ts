@@ -10,6 +10,8 @@ const appWindow = getCurrentWebviewWindow();
 // @ts-ignore
 var out: HTMLElement = document.getElementById('results');
 // @ts-ignore
+var clearButton: HTMLElement = document.getElementById('clearButton')
+// @ts-ignore
 var recognize_button: HTMLElement = document.getElementById('recognize_button');
 var recognize_button_link: HTMLElement = recognize_button.getElementsByTagName('a')[0];
 // @ts-ignore
@@ -196,9 +198,9 @@ var can;
     isAutorecognize = Boolean(args.args.automode.value);
     if (isAutorecognize) {
         recognize_button.innerHTML = "";
-        can.setMouseUpCallBack(() => { isCanvasChanged = true; recognizeText(); });
+        can.setMouseUpCallBack(() => { isCanvasChanged = true; recognizeText(); clearButton.innerText = "Clear." });
     } else {
-        can.setMouseUpCallBack(() => { recognize_button.style.fontWeight = "bold"; });
+        can.setMouseUpCallBack(() => { recognize_button.style.fontWeight = "bold"; clearButton.innerText = "Clear." });
     }
     // change window size and position on launch
     const monitor = await currentMonitor();
@@ -224,13 +226,23 @@ var can;
 })();
 
 function erase() {
-    if(!isRecognizing) {
-        if(isAutorecognize) isCanvasChanged = false;
-        // @ts-ignore
-        can.erase();
-        out.innerHTML = "";
-        recognize_button.style.fontWeight = "normal";
+    // @ts-ignore
+    if(can.trace.length > 0) {
+        if(!isRecognizing) {
+            if(isAutorecognize) isCanvasChanged = false;
+            // @ts-ignore
+            can.erase();
+            out.innerHTML = "";
+            recognize_button.style.fontWeight = "normal";
+            clearButton.innerText = "Backspace." // BackSpace key
+        }
+    } else {
+        invoke('keypress', { key: "Backspace" });
     }
+}
+
+function enterKeyPress() {
+    invoke('keypress', { key: "Enter" });
 }
 
 function undo() {
@@ -266,6 +278,7 @@ function setAutocorrect(value: boolean) {
 
 export {
     erase,
+    enterKeyPress,
     choseWord,
     recognizeText,
     setAutocorrect,

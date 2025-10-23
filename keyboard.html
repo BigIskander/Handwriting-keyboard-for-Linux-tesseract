@@ -8,6 +8,7 @@
     <script>
       var choseWord
       var erase
+      var enterKeyPress
       var recognizeText
       var setAutocorrect
       var undo
@@ -18,6 +19,7 @@
         var main = await import("/src/main.ts");
         choseWord = main.choseWord;
         erase = main.erase;
+        enterKeyPress = main.enterKeyPress
         recognizeText = main.recognizeText;
         setAutocorrect = main.setAutocorrect;
         undo = main.undo;
@@ -33,7 +35,11 @@
           <div id="recognize_button" style="margin-left: 15px; text-align: left; font-weight: normal;">
             <a onclick="recognizeText()" class="internalLinkGreen" href="JavaScript:void(0);" >Recognize.</a>
           </div> 
-          <div style="text-align: right;"><a onclick="choseWord(' ', false)" class="internalLink" href="JavaScript:void(0);" >Space.</a><a onclick="erase()" href="JavaScript:void(0);" class="internalLinkRed">Clear.</a></div>
+          <div style="text-align: right;">
+            <a onclick="choseWord(' ', false)" class="internalLink" href="JavaScript:void(0);">Space.</a>
+            <a id="clearButton" onclick="erase()" href="JavaScript:void(0);" class="internalLinkRed">Backspace.</a>
+            <a onclick="enterKeyPress()" ref="JavaScript:void(0);" class="internalLinkGreen">Enter.</a>
+          </div>
         </div>
         <div style="display:grid; grid-template-columns: 2fr 3fr 1fr; margin-top: 7px;">
           <div style="margin-left: 7px; text-align: left; margin-right: 50px;">
