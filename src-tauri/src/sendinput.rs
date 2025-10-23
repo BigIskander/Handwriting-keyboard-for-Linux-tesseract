@@ -52,21 +52,28 @@ pub fn xdotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bo
     }
     // return focus back to keyboard's window
     if !return_keyboard.is_empty() && in_focus && skip_taskbar.is_empty() {
-        return xdotool_alt_tab(Some(!debug.is_empty()));
+        return xdotool_keypress(Some(!debug.is_empty()), "alt+Tab".to_string());
     }
     return Ok(());
 }
 
-pub fn xdotool_alt_tab(to_debug: Option<bool>) -> Result<(), String> {
+pub fn xdotool_keypress(to_debug: Option<bool>, key: String) -> Result<(), String> {
     let is_debug: bool;
     if let Some(debug_debug) = to_debug {
         is_debug = debug_debug;
     } else {
         is_debug = !DEBUG.lock().unwrap().is_empty();
     }
-    let comm_args = ["key", "--delay", "100", "alt+Tab"];
+    let mut key_to_send: String = "".to_string();
+    match key.clone() {
+        val if val == "alt+Tab".to_string() => { key_to_send = "alt+Tab".to_string() },
+        val if val == "Enter".to_string() => { key_to_send = "Return".to_string() },
+        val if val == "Backspace".to_string() => { key_to_send = "BackSpace".to_string() },
+        _ => {}
+    }
+    let comm_args = ["key", "--delay", "100", &key_to_send];
     if is_debug == true {
-        println!("Triggering alt+Tab keypress using xdotool.");
+        println!("Triggering {} keypress using xdotool.", key);
         println!("Executing command: xdotool");
         print!("Command args: ");
         println!("{:?}", comm_args);
@@ -93,7 +100,7 @@ pub fn ydotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bo
     let mut comm_args = [].to_vec();
     let skip_taskbar = SKIP_TASKBAR.lock().unwrap();
     if in_focus && skip_taskbar.is_empty() {
-        let alt_tab = ydotool_alt_tab(Some(!debug.is_empty()));
+        let alt_tab = ydotool_keypress(Some(!debug.is_empty()), "alt+Tab".to_string());
         if alt_tab.is_err() {
             return alt_tab;
         }
@@ -134,21 +141,27 @@ pub fn ydotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bo
     // return focus back to keyboard's window
     if !return_keyboard.is_empty() && in_focus && skip_taskbar.is_empty() {
         // thread::sleep(time::Duration::from_millis(100));
-        return ydotool_alt_tab(Some(!debug.is_empty()));
+        return ydotool_keypress(Some(!debug.is_empty()), "alt+Tab".to_string());
     }
     return Ok(());
 }
 
-pub fn ydotool_alt_tab(to_debug: Option<bool>) -> Result<(), String> {
+pub fn ydotool_keypress(to_debug: Option<bool>, key: String) -> Result<(), String> {
     let is_debug: bool;
     if let Some(debug_debug) = to_debug {
         is_debug = debug_debug;
     } else {
         is_debug = !DEBUG.lock().unwrap().is_empty();
     }
-    let comm_args = ["key", "56:1", "15:1", "56:0", "15:0"];
+    let mut comm_args = [].to_vec();
+    match key.clone() {
+        val if val == "alt+Tab".to_string() => comm_args.append(&mut ["key", "56:1", "15:1", "56:0", "15:0"].to_vec()),
+        val if val == "Enter".to_string() => comm_args.append(&mut ["key", "14:1", "14:0"].to_vec()),
+        val if val == "Backspace".to_string() => comm_args.append(&mut ["key", "28:1", "28:0"].to_vec()),
+        _ => {}
+    }
     if is_debug {
-        println!("Triggering alt+Tab keypress using ydotool.");
+        println!("Triggering {} keypress using ydotool.", key);
         println!("Executing command: ydotool");
         print!("Command args: ");
         println!("{:?}", comm_args);
