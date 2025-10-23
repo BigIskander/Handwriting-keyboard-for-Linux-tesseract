@@ -214,10 +214,10 @@ var can;
     use_clipboard = Boolean(args.args["use-clipboard"].value);
     if(args.args["return-focus"].value == true && args.args["skip-taskbar"].value == false) {
         document.addEventListener("mouseup", async () => { 
-            setTimeout(async () => { if(await appWindow.isFocused()) invoke('alt_tab'); }, 100); 
+            setTimeout(async () => { if(await appWindow.isFocused()) invoke('keypress', { key: "alt+Tab" }); }, 100); 
         });
         document.addEventListener("touchend", async () => { 
-            setTimeout(async () => { if(await appWindow.isFocused()) invoke('alt_tab'); }, 100); 
+            setTimeout(async () => { if(await appWindow.isFocused()) invoke('keypress', { key: "alt+Tab" }); }, 100); 
         });
         // if(await appWindow.isFocused()) invoke('alt_tab'); // workaround to return focus to previous active window
     }

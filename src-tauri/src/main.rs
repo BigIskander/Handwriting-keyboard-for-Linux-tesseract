@@ -106,17 +106,17 @@ fn write_text(app: tauri::AppHandle, text: String, use_clipboard: bool) -> Resul
 }
 
 #[tauri::command]
-fn alt_tab(app: tauri::AppHandle) {
+fn keypress(app: tauri::AppHandle, key: String) {
     let use_ydotool = USE_YDOTOOL.lock().unwrap();
-    let alt_tab_result: Result<(), String>;
+    let keypress_result: Result<(), String>;
     if !use_ydotool.is_empty() {
-        alt_tab_result = sendinput::ydotool_keypress(Some(app), None, "alt+Tab".to_string());
+        keypress_result = sendinput::ydotool_keypress(Some(app), None, key);
     } else {
-        alt_tab_result = sendinput::xdotool_keypress(Some(app), None, "alt+Tab".to_string());
+        keypress_result = sendinput::xdotool_keypress(Some(app), None, key);
     }
     let debug = DEBUG.lock().unwrap();
-    if !debug.is_empty() && alt_tab_result.is_err() {
-        println!("{}", alt_tab_result.clone().unwrap_err());
+    if !debug.is_empty() && keypress_result.is_err() {
+        println!("{}", keypress_result.clone().unwrap_err());
     }
 }
 
@@ -143,7 +143,7 @@ fn open_keyboard_window(app: tauri::AppHandle) {
         window.set_background_color(Some(Color(0, 0, 0, 0))).unwrap();
     }
     let gtk_window = window.gtk_window().unwrap();
-    gtk_window.set_accept_focus(false);
+    // gtk_window.set_accept_focus(false);
     window.show().unwrap();
     app.get_webview_window("main").unwrap().close().unwrap();
 }
@@ -258,7 +258,7 @@ fn main() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![recognize_text, write_text, alt_tab, open_keyboard_window])
+        .invoke_handler(tauri::generate_handler![recognize_text, write_text, keypress, open_keyboard_window])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
