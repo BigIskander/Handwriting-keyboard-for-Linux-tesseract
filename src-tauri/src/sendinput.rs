@@ -52,12 +52,12 @@ pub fn xdotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bo
     }
     // return focus back to keyboard's window
     if !return_keyboard.is_empty() && in_focus && skip_taskbar.is_empty() {
-        return xdotool_keypress(Some(!debug.is_empty()), "alt+Tab".to_string());
+        return xdotool_keypress(None, Some(!debug.is_empty()), "alt+Tab".to_string());
     }
     return Ok(());
 }
 
-pub fn xdotool_keypress(to_debug: Option<bool>, key: String) -> Result<(), String> {
+pub fn xdotool_keypress(app: Option<tauri::AppHandle>, to_debug: Option<bool>, key: String) -> Result<(), String> {
     let is_debug: bool;
     if let Some(debug_debug) = to_debug {
         is_debug = debug_debug;
@@ -71,7 +71,18 @@ pub fn xdotool_keypress(to_debug: Option<bool>, key: String) -> Result<(), Strin
         val if val == "Backspace".to_string() => { key_to_send = "BackSpace".to_string() },
         _ => {}
     }
-    let comm_args = ["key", "--delay", "100", &key_to_send];
+    let mut comm_args = [].to_vec();
+    let mut in_focus: bool = false;
+    if key != "alt+Tab".to_string() {
+        if let Some(app_hand) = app {
+            in_focus = app_hand.get_webview_window("local").unwrap().is_focused().unwrap();
+        }
+    }
+    if in_focus == true {
+        comm_args.append(&mut ["key", "--delay", "100", "alt+Tab", &key_to_send].to_vec());
+    } else {
+        comm_args.append(&mut ["key", "--delay", "100", &key_to_send].to_vec());
+    }
     if is_debug == true {
         println!("Triggering {} keypress using xdotool.", key);
         println!("Executing command: xdotool");
@@ -100,7 +111,7 @@ pub fn ydotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bo
     let mut comm_args = [].to_vec();
     let skip_taskbar = SKIP_TASKBAR.lock().unwrap();
     if in_focus && skip_taskbar.is_empty() {
-        let alt_tab = ydotool_keypress(Some(!debug.is_empty()), "alt+Tab".to_string());
+        let alt_tab = ydotool_keypress(None, Some(!debug.is_empty()), "alt+Tab".to_string());
         if alt_tab.is_err() {
             return alt_tab;
         }
@@ -141,18 +152,31 @@ pub fn ydotool_write_text(app: tauri::AppHandle, text: String, use_clipboard: bo
     // return focus back to keyboard's window
     if !return_keyboard.is_empty() && in_focus && skip_taskbar.is_empty() {
         // thread::sleep(time::Duration::from_millis(100));
-        return ydotool_keypress(Some(!debug.is_empty()), "alt+Tab".to_string());
+        return ydotool_keypress(None, Some(!debug.is_empty()), "alt+Tab".to_string());
     }
     return Ok(());
 }
 
-pub fn ydotool_keypress(to_debug: Option<bool>, key: String) -> Result<(), String> {
+pub fn ydotool_keypress(app: Option<tauri::AppHandle>, to_debug: Option<bool>, key: String) -> Result<(), String> {
     let is_debug: bool;
     if let Some(debug_debug) = to_debug {
         is_debug = debug_debug;
     } else {
         is_debug = !DEBUG.lock().unwrap().is_empty();
     }
+    let mut in_focus: bool = false;
+    if key != "alt+Tab".to_string() {
+        if let Some(app_hand) = app {
+            in_focus = app_hand.get_webview_window("local").unwrap().is_focused().unwrap();
+        }
+    }
+    if in_focus == true {
+        let alt_tab = ydotool_keypress(None, to_debug, "alt+Tab".to_string());
+        if alt_tab.is_err() {
+            return alt_tab;
+        }
+        thread::sleep(time::Duration::from_millis(100));
+    } 
     let mut comm_args = [].to_vec();
     match key.clone() {
         val if val == "alt+Tab".to_string() => comm_args.append(&mut ["key", "56:1", "15:1", "56:0", "15:0"].to_vec()),

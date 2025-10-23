@@ -106,13 +106,13 @@ fn write_text(app: tauri::AppHandle, text: String, use_clipboard: bool) -> Resul
 }
 
 #[tauri::command]
-fn alt_tab() {
+fn alt_tab(app: tauri::AppHandle) {
     let use_ydotool = USE_YDOTOOL.lock().unwrap();
     let alt_tab_result: Result<(), String>;
     if !use_ydotool.is_empty() {
-        alt_tab_result = sendinput::ydotool_keypress(None, "alt+Tab".to_string());
+        alt_tab_result = sendinput::ydotool_keypress(Some(app), None, "alt+Tab".to_string());
     } else {
-        alt_tab_result = sendinput::xdotool_keypress(None, "alt+Tab".to_string());
+        alt_tab_result = sendinput::xdotool_keypress(Some(app), None, "alt+Tab".to_string());
     }
     let debug = DEBUG.lock().unwrap();
     if !debug.is_empty() && alt_tab_result.is_err() {
