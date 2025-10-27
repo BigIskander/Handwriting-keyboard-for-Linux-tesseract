@@ -1461,7 +1461,7 @@ dependencies = [
 
 [[package]]
 name = "handwriting-keyboard-t"
-version = "2.1.1"
+version = "2.1.2"
 dependencies = [
  "base64 0.21.7",
  "gif",
