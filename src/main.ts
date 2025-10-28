@@ -246,17 +246,19 @@ function enterKeyPress() {
 }
 
 function undo() {
-    // @ts-ignore
-    can.undo();
-    // @ts-ignore
-    if(isAutorecognize) {
+    if(!isRecognizing) {
         // @ts-ignore
-        if(can.step.length != 0) { isCanvasChanged = true; recognizeText(); }
-        else { isCanvasChanged = false; out.innerHTML = "";  }
-    } else {
+        can.undo();
         // @ts-ignore
-        if(!isRecognizing && can.step.length == 0) recognize_button.style.fontWeight = "normal";
-        else recognize_button.style.fontWeight = "bold";
+        if(isAutorecognize) {
+            // @ts-ignore
+            if(can.step.length != 0) { isCanvasChanged = true; recognizeText(); }
+            else { isCanvasChanged = false; out.innerHTML = ""; clearButton.innerText = "Backspace."; }
+        } else {
+            // @ts-ignore
+            if(can.step.length == 0) { recognize_button.style.fontWeight = "normal"; clearButton.innerText = "Backspace."; }
+            else recognize_button.style.fontWeight = "bold";
+        }
     }
 }
 
